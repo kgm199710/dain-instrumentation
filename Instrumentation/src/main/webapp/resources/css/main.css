@@ -1,0 +1,7 @@
+:target:before{
+  content: "";
+  display: block;
+  height: 100px;          /* fixed header 높이 만큼 부여 or 브라우저 상단에서 띄워놓기 원하는 높이 */
+  margin-top: -100px;     /* 위에서 설정한 높이와 동일한 만큼을 음수로 제공 */
+  visibility: hidden;
+}

@@ -1,0 +1,83 @@
+@charset "utf-8";
+body{
+  font-family: AppleSDGothicNeo-Regular, 'Malgun Gothic', '맑은 고딕', dotum, '돋움', sans-serif; -webkit-font-smoothing: antialiased;
+}
+select {
+  width: 200px;
+  padding: .1em .3em;
+  font-family: inherit;
+  border: 1px solid #999;
+  border-radius: 0px;
+}
+input {
+  padding: .3em .3em;
+  font-family: inherit;
+  border: 1px solid #999;
+  border-radius: 0px;
+}
+button {
+  padding: .3em .3em;
+  width: 100px;
+  margin-top:10px;
+  margin-bottom:10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-family: inherit;
+  border: 1px solid #999;
+  border-radius: 0px;
+}
+a{
+  color:black;
+  padding-left:5px;
+  padding-right:5px;
+  text-decoration:none;
+}
+table {
+  text-align: center;
+  font-size: 12px;
+  padding-top:10px;
+}
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #dadada;
+  white-space:nowrap;
+}
+
+.title{
+    width: 900px;
+  text-align: center;
+}
+.container_selected{
+  display:flex;
+  flex-direction: row;
+}
+
+.search{
+  width:860px;
+  background-color: #F1F1F1;
+  /* position:fixed; */
+  top: 0;
+  padding : 20px;
+  z-index: 999;
+}
+.chart{
+    display: block;
+    width: 1100px;
+    height : 400px;
+    border: 1px solid #999;
+    margin-bottom:5px;
+}
+.info{
+  font-size: 14px;
+  align-items: left;
+  margin:20px;
+}
+#logger_name{
+  margin : 10px;
+}
+@media print {
+.search {display:none;}
+}
+@page{
+  size:auto; margin : 15mm;
+}

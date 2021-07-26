@@ -1,0 +1,141 @@
+@charset "utf-8";
+
+html {
+    -webkit-text-size-adjust: none;
+    -moz-text-size-adjust: none;
+    -ms-text-size-adjust: none;
+}
+body{
+    font-family: AppleSDGothicNeo-Regular, 'Malgun Gothic', '맑은 고딕', dotum, '돋움', sans-serif; -webkit-font-smoothing: antialiased;
+  }
+  
+.container {
+    width: 1000px;
+    margin: 10px auto;
+    padding: 20px;
+    border: 1px solid #bcbcbc;
+    font-size: 12px;
+    word-break: keep-all;
+}
+
+.header {
+    background-color: #003964;
+    color: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #bcbcbc;
+    text-align: center;
+}
+
+.title {
+    font-size: 35px;
+    font-weight: 200;
+}
+
+.top {
+    background-color: #edf0f3;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 3px;
+    box-shadow: 2px 2px 2px 1px #dee2e6;
+
+}
+
+.left {
+    background-color: #edf0f3;
+    width: 470px;
+    padding: 10px;
+    margin: auto;
+    margin-bottom: 10px;
+    float: left;
+    border-radius: 3px;
+    box-shadow: 2px 2px 2px 1px #dee2e6;
+}
+
+.right {
+    background-color: #edf0f3;
+    width: 470px;
+    padding: 10px;
+    margin: auto;
+    margin-bottom: 10px;
+    float: right;
+    border-radius: 3px;
+    box-shadow: 2px 2px 2px 1px #dee2e6;
+}
+.flex{
+    background-color: #edf0f3;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    clear: both;
+    margin: auto;
+    margin-bottom: 10px;
+    border-radius: 3px;
+    box-shadow: 2px 2px 2px 1px #dee2e6;
+}
+table {
+    background-color: white;
+    border: 1px solid #BDBDBD;
+    text-align: center;
+    border-collapse: collapse;
+    /* white-space:nowrap; */
+}
+.flex > table{
+    width:320px;
+}
+tr td {
+    border: 1px solid #BDBDBD;
+    height: 30px;
+    padding: 0 5px 0 5px;
+}
+
+a {
+    color: blue;
+}
+
+a:hover {
+    color: red;
+}
+
+.plan {
+	clear: both;
+	margin-bottom: 20px;
+	padding: 10px;
+	border: 1px solid #bcbcbc;
+    border-radius: 3px;
+    box-shadow: 2px 2px 2px 1px #dee2e6;
+}
+
+img {
+	width: 100%;
+	height: auto;
+	margin: auto;
+}
+
+.footer {
+    clear: both;
+    padding: 20px;
+    background-color: #003964;
+    color: white;
+    border: 1px solid #bcbcbc;
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+    .container {
+        width: auto;
+    }
+    .left {
+        float: none;
+        width: auto;
+    }
+    .right {
+        float: none;
+        width: auto;
+    }
+    .flex > table{
+        width:100%;
+    }
+}
