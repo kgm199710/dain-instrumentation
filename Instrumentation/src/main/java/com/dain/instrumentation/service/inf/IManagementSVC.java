@@ -23,4 +23,5 @@ public interface IManagementSVC {
 	//
 	String getMainContHtml(ArrayList<SpotVO> spList, ArrayList<String> cpList);
 	String getModalContHtml();
+	String getInfoHtml(String tb);
 }

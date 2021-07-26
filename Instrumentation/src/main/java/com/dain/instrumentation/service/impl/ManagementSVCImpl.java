@@ -6,11 +6,13 @@ import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.dain.instrumentation.model.dao.impl.management.DataInfoDAOImpl;
 import com.dain.instrumentation.model.dao.impl.management.LoggerDAOImpl;
 import com.dain.instrumentation.model.dao.impl.management.NotificationDAOImpl;
 import com.dain.instrumentation.model.dao.impl.management.PlacesDAOImpl;
 import com.dain.instrumentation.model.dao.impl.management.SpotDAOImpl;
 import com.dain.instrumentation.model.dao.impl.management.SystemDAOImpl;
+import com.dain.instrumentation.model.dao.inf.management.IDataInfoDAO;
 import com.dain.instrumentation.model.dao.inf.management.ILoggerDAO;
 import com.dain.instrumentation.model.dao.inf.management.INotificationDAO;
 import com.dain.instrumentation.model.dao.inf.management.IPlacesDAO;
@@ -19,6 +21,7 @@ import com.dain.instrumentation.model.dao.inf.management.ISystemDAO;
 import com.dain.instrumentation.model.vo.LoggerVO;
 import com.dain.instrumentation.model.vo.NotificationVO;
 import com.dain.instrumentation.model.vo.PlacesVO;
+import com.dain.instrumentation.model.vo.SensorsVO;
 import com.dain.instrumentation.model.vo.SpotVO;
 import com.dain.instrumentation.service.inf.IManagementSVC;
 
@@ -34,6 +37,8 @@ public class ManagementSVCImpl implements IManagementSVC {
 	ISystemDAO ssDao;
 //	@Autowired
 	INotificationDAO nfDao;
+//	@Autowired
+	IDataInfoDAO ifDao;
 
 
 	//출력여부 확인 된 장소/회사 리스트 출력
@@ -289,5 +294,50 @@ public class ManagementSVCImpl implements IManagementSVC {
 			return modalContHtml;
 		}
 	
+	@Override
+		public String getInfoHtml(String tb) {
+			String infoHtml = "";
+			ifDao = new DataInfoDAOImpl();
+			ArrayList<SensorsVO> ssList = new ArrayList<SensorsVO>();
+			ssList = ifDao.selectSensorByLogger(tb);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			
+			for (SensorsVO ss : ssList) {
+				infoHtml += 
+						"						<tr>\r\n"
+						+ "							<td nowrap>" + ss.getIdx() + "</td>\r\n"
+						+ "							<td nowrap>" + ss.getLogger() + "</td>\r\n"
+						+ "							<td nowrap>" + ss.getSenName() + "</td>\r\n"
+						+ "							<td nowrap>" + ((ss.getSenInfo()==null)?ss.getSenInfo():"") + "</td>\r\n"
+						+ "							<td nowrap>" + ((ss.getSenType()==null)?ss.getSenType():"") + "</td>\r\n"
+						+ "							<td nowrap>" + ss.getSenOrder() + "</td>\r\n"
+						+ "							<td nowrap>" + ((ss.getSenGroup()==null)?ss.getSenGroup():"") + "</td>\r\n"
+						+ "							<td nowrap>" + ss.getSenGroupOrder() + "</td>\r\n"
+						+ "							<td nowrap>" + (ss.isMainVieewEnable()?"O":"X") + "</td>\r\n"
+						+ "							<td nowrap>" + sdf.format(ss.getSensorInit()) + "</td>\r\n"
+						+ "							<td nowrap>" + ((ss.getCalculation1()==null)?ss.getCalculation1():"") + "</td>\r\n"
+						+ "							<td nowrap>" + ((ss.getCalculation2()==null)?ss.getCalculation2():"") + "</td>\r\n"
+						+ "							<td nowrap>" + ((ss.getCalculation3()==null)?ss.getCalculation3():"") + "</td>\r\n"
+						+ "							<td nowrap>" + ((ss.getCalculation4()==null)?ss.getCalculation4():"") + "</td>\r\n"
+						+ "							<td nowrap>" + ((ss.getCalculation5()==null)?ss.getCalculation5():"") + "</td>\r\n"
+						+ "							<td nowrap>" + ((ss.getCalculation6()==null)?ss.getCalculation6():"") + "</td>\r\n"
+						+ "							<td nowrap>" + (ss.isChkCal1()?"O":"X") + "</td>\r\n"
+						+ "							<td nowrap>" + (ss.isChkCal2()?"O":"X") + "</td>\r\n"
+						+ "							<td nowrap>" + (ss.isChkCal3()?"O":"X") + "</td>\r\n"
+						+ "							<td nowrap>" + (ss.isChkCal4()?"O":"X") + "</td>\r\n"
+						+ "							<td nowrap>" + (ss.isChkCal5()?"O":"X") + "</td>\r\n"
+						+ "							<td nowrap>" + (ss.isChkCal6()?"O":"X") + "</td>\r\n"
+						+ "							<td nowrap>" + (ss.isChkSms()?"O":"X") + "</td>\r\n"
+						+ "							<td nowrap>" + ss.getSafe1() + "</td>\r\n"
+						+ "							<td nowrap>" + ss.getSafe2() + "</td>\r\n"
+						+ "							<td nowrap>" + ss.getSafe3() + "</td>\r\n"
+						+ "							<td nowrap>" + ((ss.getEtc1()==null)?ss.getEtc1():"") + "</td>\r\n"
+						+ "							<td nowrap>" + ((ss.getEtc2()==null)?ss.getEtc2():"") + "</td>\r\n"
+						+ "							<td nowrap>" + ((ss.getEtc3()==null)?ss.getEtc3():"")+ "</td>\r\n"
+						+ "						</tr>";
+			}
+//			System.out.println(infoHtml);
+			return infoHtml;
+		}
 	
 }

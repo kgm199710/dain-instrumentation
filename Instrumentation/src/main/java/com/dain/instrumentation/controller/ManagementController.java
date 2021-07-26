@@ -135,6 +135,17 @@ public class ManagementController {
 		request.setAttribute("info", info);
 		logger.info("Welcome home! The client locale is {}.", locale);
 		System.out.println("info in");
+		
+		
+		
+		mSvc = new ManagementSVCImpl();
+		String infoHtml = "";
+		
+		infoHtml = mSvc.getInfoHtml(tb);
+		
+
+		model.addAttribute("info", infoHtml);
+		model.addAttribute("tb", tb);
 		return "management/info";
 	}
 	// data 출력
