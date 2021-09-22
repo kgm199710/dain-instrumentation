@@ -56,19 +56,17 @@
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item"><a class="nav-link" href="#Location">계측기 설치위치</a></li>
 					<li class="nav-item"><a class="nav-link" href="#part1">계측 현황</a></li>
-					
 					<li class="nav-item dropdown">
 						<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
 							계측기
 						</a>
 						<div class="dropdown-menu">
-							<a  class="dropdown-item" href="#WL">WL</a>
+							<a  class="dropdown-item" href="#WL명">WL</a>
 							<a class="dropdown-item" href="#ipi명">ipi명</a>
 						</div>
 					</li>
 				</ul>
 				<ul class="navbar-nav navbar-right">
-					<li class="nav-item"><a  class="nav-link" href="/"><i class="fas fa-history"></i>현재시간</a></li>
 					<li class="nav-item"><a  class="nav-link" href="로그아웃"><i class="fas fa-sign-out-alt"></i> Log out</a></li>
 				</ul>
 			</div>
@@ -76,7 +74,7 @@
 	</nav>
 
 	<div class="jumbotron text-center" style="padding-bottom:15px;">
-		<h2>(현장명) <small class="text-secondary">자동화계측</small></h2>
+		<h2>판교더샵<!--  <small class="text-secondary">자동화계측</small> --></h2>
 	</div><!-- header -->
 
 	<div class="container">
@@ -87,7 +85,7 @@
 						<h5><i class="fas fa-map-marker-alt text-warning"></i>&nbsp&nbsp<small>계측기 설치위치</small></h5>
 					</div><!-- card-header -->
 					<div class="card-body border border-secondary">
-						<img src="img/main.png" alt="계측기 평면도" width="100%" />
+						<img src="resources/img/main.png" alt="계측기 평면도" width="100%" />
 					</div><!-- card-body -->  
 				</div><!-- location card -->
 			<div id="part1"></div>
@@ -130,18 +128,19 @@
 												<th class="text-center"><a href="#WL">수위계명</a></th>
 											</tr>
 										</thead>
+<!-- 										mv	|?	         |현재수위(m)          |/|/|/  -->
 										<tbody>
 											<tr>
 												<td class="text-center" bgcolor="#eeeeee">지하수위</td>
-												<td class="px-0">($val[$s[$i]][$sens_no_w[$i]]*100)/100 m</td>
+												<td class="px-0">db3번항목</td>
 											</tr>
 											<tr>
 												<td class="text-center" bgcolor="#eeeeee">변화량</td>
-												<td class="px-0">($chg[$s[$i]][$sens_no_w[$i]]*100)/100 m</td>
+												<td class="px-0">db3번항목 첫째값에서 현재 값 빼기</td>
 											</tr>
 											<tr>
 												<td class="text-center" bgcolor="#eeeeee">일변화량</td>
-												<td class="px-0">(($chart[$s[$i]][0][$sens_no_w[$i]]-$chart[$s[$i]][23][$sens_no_w[$i]])*100)/100 m</td>
+												<td class="px-0">(당일0시데이터)-(전날23시데이터)</td>
 											</tr>
 										</tbody>
 									</table>
@@ -155,14 +154,15 @@
 												<th class="text-center"><a href="#IPI명">IPI명</a></th>
 											</tr>
 										</thead>
+<!-- 										mv      |현재각도	   | 변위(mm)	   |/|/|/ -->
 										<tbody>
 											<tr>
 												<td class="text-center px-0" bgcolor="#eeeeee">최대변위</td>
-												<td class="px-0">max($cum_chg[$i]) mm</td>
+												<td class="px-0">해당 ipi그룹중 db3번항목중 가장 큰값</td>
 											</tr>
 											<tr>
 												<td class="text-center px-0" bgcolor="#eeeeee">최대변위지점</td>
-												<td class="px-0">$depth[$i][array_search((max($cum_chg[$i])), $cum_chg[$i])] m</td>
+												<td class="px-0">윗항목의 ipi번호</td>
 											</tr>
 										</tbody>
 									</table>
@@ -181,9 +181,13 @@
 					</div>
 					<div class="card-body border border-secondary">
 						<div class="row">
+<!-- 							수위계반복시작 -->
 							<div class="col-md-6">
 								<!--차트만드는 코드?-->
-								<!--<div id = "<?=$chart_no_w[$i]?>" style="margin-bottom:10px;padding:1px;height:<?=$chart_height*1.5?>px; border: 1px solid #ccc;"></div>-->
+<%-- 								<div id = "차트명 아래 js와 연동해야됨" style="margin-bottom:10px;padding:1px;height:<?=$chart_height*1.5?>px; border: 1px solid #ccc;"></div> --%>
+<!-- 								차트 height는 변수로 임의설정해야됨 -->
+								<div id = "chart_1_w" style="margin-bottom:10px;padding:1px;height:331px; border: 1px solid #ccc;"></div>
+<!-- 								여기까지삽입 -->
 								<div class="table-responsive">
 									<table class="table text-center table-bordered">
 										<thead>
@@ -197,7 +201,7 @@
 										</thead>
 										<tr>
 											<td><a href="수위계상세페이지" role="button" target="_blank"><strong>수위계명</strong></a></td>
-											<td>현재수위m/td>
+											<td>현재수위m</td>
 											<td>변화랑m</td>
 											<td>24시간변화량m</td>
 											<td></td>
@@ -205,19 +209,22 @@
 									</table>
 								</div>
 							</div>
+<!-- 							수위계반복끝 -->
 						</div>
 					</div><!-- card-body -->
 				</div><!-- card -->
 			
+<!-- 			ipi반복시작 -->
 			<div id="IPI명"></div>
 			<div class="card mb-3">
 				<div class="card-header bg-secondary text-white border border-secondary pb-1">
-					<h5><i class="fas fa-chart-line text-warning"></i>&nbsp&nbsp<small>IPI명</small></h5>
+					<h5><i class="fas fa-chart-line text-warning"></i>&nbsp&nbsp<small>IPI</small></h5>
 				</div>
 				<div class="card-body border border-secondary">
 					<div class="row">
 						<div class="col-md-6">
-							<div id = "IPI차트명" style="margin-bottom:10px;padding:1px;height:<?=$chart_height*4?>px; border: 1px solid #ccc;"></div>
+<%-- 							<div id = "IPI차트명" style="margin-bottom:10px;padding:1px;height:<?=$chart_height*4?>px; border: 1px solid #ccc;"></div> --%>
+							<div id = "chart_1_ipi" style="margin-bottom:10px;padding:1px;height:840px; border: 1px solid #ccc;"></div>
 						</div>
 							 
 						<div class="col-md-6">
@@ -256,6 +263,7 @@
 				
 				</div><!-- card-body -->
 			</div><!-- card -->
+<!-- 			ipi반복끝 -->
 		
 		</div><!-- content -->
 	
@@ -271,24 +279,31 @@
 
 <script type= "text/javascript">
 // 지하수위계 차트 
+	
 	google.charts.setOnLoadCallback(drawChart_w);
+	
+	//옵션설정
 	var options_w = {
 		width:'100%',height:'100%',
 		legend: { position: "top", maxLines:2, alignment:"end",textStyle: {fontSize: 9}},
 		title: '지하수위계 24시간 변화 그래프',
 		chartArea: {top:80, bottom:50, left:50, right:50},
+		//가로줄(→)
 		hAxis: {
 			title:'Time',
 			titleTextStyle: {color: '#000',fontName: 'Arial',italic:false, fontSize: 9},
 			format:'yyyy-MM-dd HH:mm',
 			textStyle: {color: '#000', fontName: 'Arial',fontSize: 9},
 		},
+		//세로줄(↑)
 		vAxis: {
 			title:'GL.m',
 			textStyle: {color: '#000', fontName: 'Arial',fontSize: 9},
 			titleTextStyle: {color: '#000',fontName: 'Arial',italic:false, fontSize: 9},
-			viewWindow: {min: <?=min($chart_range)?>, max: <?=max($chart_range)?>},
+			//차트 노출범위 최솟값 최댓값
+			viewWindow: {min: -50, max: 0},
 		},
+		//선 색상/보이는여부/폰트사이즈/선굵기
 		series: {
 			0: {color : 'blue', pointsVisible : true, pointSize:8,lineWidth  :2},
 			1: {color : '#F2CB61', lineWidth  :2, visibleInLegend: false},
@@ -317,18 +332,45 @@
 			},
 		}
 	};
-	function drawChart_w() {
-
-		var chart_w1 = new google.visualization.LineChart(document.getElementById('chart_1_w'));
-		var chart_w2 = new google.visualization.LineChart(document.getElementById('chart_2_w'));
-		var chart_w3 = new google.visualization.LineChart(document.getElementById('chart_3_w'));
-		var chart_w5 = new google.visualization.LineChart(document.getElementById('chart_5_w'));
+	//데이터입력 및 그리기 함수
+	function drawChart_w(){
+		//데이터입력
+		var data_w1=new google.visualization.DataTable();
+		data_w1.addColumn('datetime','시간');
+		data_w1.addColumn('number','WL_01');
+		data_w1.addColumn({type:'string',role:'annotation'});
+		data_w1.addRows(
+		    [
+		        [new Date(2021,8,21,21,00,00),-19.7985848820432,'-19.80m'],
+		        [new Date(2021,8,21,20,00,00),-19.8227963346402,null],
+		        [new Date(2021,8,21,19,00,00),-19.8112670714988,null],
+		        [new Date(2021,8,21,18,00,00),-19.8312030890141,null],
+		        [new Date(2021,8,21,17,00,00),-19.7992093837967,null],
+		        [new Date(2021,8,21,16,00,00),-19.8014992235595,null],
+		        [new Date(2021,8,21,15,00,00),-19.8128843709117,null],
+		        [new Date(2021,8,21,14,00,00),-19.8239972995507,null],
+		        [new Date(2021,8,21,13,00,00),-19.7982005732719,null],
+		        [new Date(2021,8,21,12,00,00),-19.8020116352547,null],
+		        [new Date(2021,8,21,11,00,00),-19.8021317317458,null],
+		        [new Date(2021,8,21,10,00,00),-19.800114110696,null],
+		        [new Date(2021,8,21,09,00,00),-19.7923718902393,null],
+		        [new Date(2021,8,21,08,00,00),-19.7991853644985,null],
+		        [new Date(2021,8,21,07,00,00),-19.8081125370004,null],
+		        [new Date(2021,8,21,06,00,00),-19.8140853358222,null],
+		        [new Date(2021,8,21,05,00,00),-19.8172078445897,null],
+		        [new Date(2021,8,21,04,00,00),-19.8321078159134,null],
+		        [new Date(2021,8,21,03,00,00),-19.8142614773424,null],
+		        [new Date(2021,8,21,02,00,00),-19.8131565896247,null],
+		        [new Date(2021,8,21,01,00,00),-19.7826040423,null],
+		        [new Date(2021,8,21,00,00,00),-19.7814991545823,null],
+		        [new Date(2021,8,20,23,00,00),-19.7693614025529,null],
+		        [new Date(2021,8,20,22,00,00),-19.7957586112871,'-19.80m']
+		    ]
+		);
 		
-		chart_w1.draw(data_w1, options_w);
-		chart_w2.draw(data_w2, options_w);
-		chart_w3.draw(data_w3, options_w);
-		chart_w5.draw(data_w5, options_w);
-		
+		//차트그리기
+		var chart_w1=new google.visualization.LineChart(document.getElementById('chart_1_w'));
+		chart_w1.draw(data_w1,options_w);
 		window.addEventListener('resize',drawChart_w,false);
 	};
 
@@ -336,28 +378,29 @@
 	//지중경사계 차트
 	google.charts.setOnLoadCallback(drawChart_ipi);
 	
-	var 옵션명 = {
-		width:'100%',height:'100%',
-		legend: 'none',
-		title: '지중경사계 그래프',
-		chartArea: {top:80, bottom:80, left:50, right:50},
-		orientation: 'vertical',
-		hAxis: {
-			title:'displacement(mm)',
-			titleTextStyle: {color: '#000',fontName: 'Arial',italic:false, fontSize: 9},
-			textStyle: {color: '#000', fontName: 'Arial',fontSize: 9},
-			viewWindow: {min: 최소값, max: 최대값},
-		},
-		vAxis: {
-			title:'depth(m)',
-			titleTextStyle: {color: '#000',fontName: 'Arial',italic:false, fontSize: 9},
-			textStyle: {color: '#000', fontName: 'Arial',fontSize: 9},
-			gridlines: {minSpacing: 최소공란값,},
-		},
-		series: {
-			0: {color : 'blue',pointsVisible : true, pointSize:8,lineWidth  :2},
-		},
-		dataOpacity: 0.3,
+	var option_i={
+		width:'100%',
+	    height:'100%',
+	    legend:'none',
+	    title:'지중경사계 그래프',
+	    chartArea:{top:80,bottom:80,left:50,right:50},
+	    orientation:'vertical',
+	    hAxis:{
+	        title:'displacement(mm)',
+	        titleTextStyle:{color:'#000',fontName:'Arial',italic:false,fontSize:9},
+	        textStyle:{color:'#000',fontName:'Arial',fontSize:9},
+	        viewWindow:{min:-100,max:100}
+	    },
+	    vAxis:{
+	        title:'depth(m)',
+	        titleTextStyle:{color:'#000',fontName:'Arial',italic:false,fontSize:9},
+	        textStyle:{color:'#000',fontName:'Arial',fontSize:9},
+	        gridlines:{minSpacing:20}
+	    },
+	    series:{
+	        0:{color:'blue',pointsVisible:true,pointSize:8,lineWidth:2}
+	    },
+	    dataOpacity:0.3,
 		annotations: {
 			boxStyle: {
 				// Color of the box outline.
@@ -376,27 +419,39 @@
 			},
 		}
 	};
-	function drawChart_ipi() {
-		var data_i1 = new google.visualization.DataTable();
-		var data_i2 = new google.visualization.DataTable();
-		var data_i3 = new google.visualization.DataTable();
-		var data_i4 = new google.visualization.DataTable();
-		var data_i5 = new google.visualization.DataTable();
-		    
-		var chart_i1 = new google.visualization.LineChart(document.getElementById('chart_1_ipi'));
-		var chart_i2 = new google.visualization.LineChart(document.getElementById('chart_2_ipi'));
-		var chart_i3 = new google.visualization.LineChart(document.getElementById('chart_3_ipi'));
-		var chart_i4 = new google.visualization.LineChart(document.getElementById('chart_4_ipi'));
-		var chart_i5 = new google.visualization.LineChart(document.getElementById('chart_5_ipi'));
-		
-		chart_i1.draw(data_i1, option_i1);
-		chart_i2.draw(data_i2, option_i2);
-		chart_i3.draw(data_i3, option_i3);
-		chart_i4.draw(data_i4, option_i4);
-		chart_i5.draw(data_i5, option_i5);
-		window.addEventListener('resize',drawChart_ipi,false);
-	}
+    function drawChart_ipi(){
+        var data_i1=new google.visualization.DataTable();
+        data_i1.addColumn('number','depth(m)');
+        data_i1.addColumn('number','change');
+        data_i1.addColumn({type:'string',role:'annotation'});
+        data_i1.addRows(
+            [
+                [0,2.83,null],
+                [-2,2.90,'max : 2.90mm'], //최대 변위만 표시할것
+                [-4,1.95,null],
+                [-6,0.24,null],
+                [-8,1.01,null],
+                [-10,1.32,null],
+                [-12,1.66,null],
+                [-14,1.34,null],
+                [-16,0.04,null],
+                [-18,0.92,null],
+                [-20,1.07,null],
+                [-22,0.52,null],
+                [-24,0.42,null],
+                [-26,0.28,null],
+                [-28,0.20,null],
+                [-30,-0.08,null],
+                [-32,0.43,null],
+                [-34,0.08,null],
+                [-36,0,null]
+            ]
+        );
+        var chart_i1=new google.visualization.LineChart(document.getElementById('chart_1_ipi'));
+        chart_i1.draw(data_i1,option_i);
+        window.addEventListener('resize',drawChart_ipi,false);}
 </script>
+
 <script type="text/javascript"> 
 	// F12 버튼 방지 
 	$(document).ready(function(){ 
