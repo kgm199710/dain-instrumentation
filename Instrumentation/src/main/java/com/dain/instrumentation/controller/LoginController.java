@@ -40,15 +40,24 @@ public class LoginController {
 	public ModelAndView loginProc(Locale locale, HttpSession ses,  String user_id, String user_pw, String pageName, String pageKorName) {
 		System.out.println("login proc");
 		
+		//임의로 지정 - 후에 제대로된 DB까지 생성하면 DB에서 받아오는 것으로
+		String correctId = "pangyothesharp";
+		String correctPw = "pangyothesharp";
+		
 		mav = new ModelAndView();
 //		System.out.println("login=" + user_id + ", pw=" + user_pw + ", pageName=" + pageName + ", pageKorName=" + pageKorName);
 		logger.info("Welcome home! The client locale is {}.", locale);
 		
-		UserVO user = new UserVO(); 
-		ses.setAttribute("user", user);
-		mav.setViewName("redirect:/" + pageName);
-		System.out.println(mav.getViewName());
-		
+		if(user_id.equals(correctId) && user_pw.equals(correctPw)) {
+			UserVO user = new UserVO();
+			ses.setAttribute("user", user);
+			mav.setViewName("redirect:/" + pageName);
+			System.out.println(mav.getViewName());
+		} else {
+			mav.addObject("pageName",pageName);
+			mav.addObject("pageKorName",pageKorName);
+			mav.setViewName("./login/login");
+		}
 		return mav;
 	}
 
