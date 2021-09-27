@@ -35,10 +35,15 @@ public class PangyothesharpController {
 			mav.addObject("pageKorName",pageKorName);
 			mav.setViewName("./login/login");
 			return mav;
+		} else {
+			mav.setViewName("pangyothesharp/main");
+			
+			
+			
+			
+			return mav;
 		}
 		
-		mav.setViewName("pangyothesharp/main");
 		
-		return mav;
 	}
 }

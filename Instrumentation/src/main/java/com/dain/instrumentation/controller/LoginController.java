@@ -68,6 +68,7 @@ public class LoginController {
 		System.out.println("logout_proc()...");
 		ses.invalidate();
 		String url = "redirect:" + request.getHeader("Referer");
+		System.out.println(url);
 		return url; // 이전페이지로 돌아가기
 	}
 }
