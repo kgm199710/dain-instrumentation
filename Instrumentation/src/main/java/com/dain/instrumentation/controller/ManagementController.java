@@ -83,26 +83,6 @@ public class ManagementController {
 		
 		return mav;
 	}
-	
-	// 로그인 페이지 in
-	@RequestMapping(value = "login", method = RequestMethod.GET)
-	public String login(Locale locale, Model model) {
-		logger.info("Welcome home! The client locale is {}.", locale);
-		System.out.println("login page in");
-		
-		return "management/login";
-	}
-
-	// 로그인 하기
-	// 로그인 검증 Service 만들어야됨
-	@RequestMapping(value = "login_proc", method = RequestMethod.POST)
-	public String loginProc(HttpSession ses, Model model, String login, String pw, Locale locale) {
-		logger.info("Welcome home! The client locale is {}.", locale);
-		System.out.println("login proc");
-		
-		
-		return "redirect:/";
-	}
 
 
 //	// 로그인 하기
@@ -114,15 +94,6 @@ public class ManagementController {
 //		
 //		return "management/main";
 //	}
-	// 로그아웃 시
-	@RequestMapping(value="logout", method=RequestMethod.GET)
-	public String memberLogout(HttpSession ses, Model model, Locale locale) {
-		logger.info("Welcome home! The client locale is {}.", locale);
-		System.out.println("logout_proc()...");
-		ses.invalidate();
-//			return "management/main"; // 그냥 메인페이지 출력
-		return "redirect:/"; // 이전페이지로 돌아가기
-	}
 	
 
 	// info 출력
