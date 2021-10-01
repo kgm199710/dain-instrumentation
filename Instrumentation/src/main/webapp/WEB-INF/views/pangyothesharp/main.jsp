@@ -11,7 +11,8 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
-	<meta http-equiv="refresh" content="600"/>
+	<!-- 새로고침 -->
+	<meta http-equiv="refresh" content="60"/>
 	
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -246,7 +247,8 @@
 									<tr>
 										<td><a href="IPI데이터웹페이지" role="button" target="_blank"><strong>IPI-2</strong></a></td>
 										<td>깊이 m</td>
-										<td>변위 mm</td>
+<!-- 										해당센서(최근값 - 최초값) + 해당센서 이전까지의 값(0m에서 시작) + existing(기변위)값 -->
+										<td>누적변위 mm</td>
 										<td></td>
 									</tr>	
 									            <!--참조-->
@@ -341,7 +343,7 @@
 		data_w1.addColumn({type:'string',role:'annotation'});
 		data_w1.addRows(
 		    [
-		        [new Date(2021,8,21,21,00,00),-19.7985848820432,'-19.80m'],
+		        [new Date(2021,8,21,21,00,00),-19.7985848820432,'-19.80m'], //첫번째와 마지막값만 소수점2번째까지 출력
 		        [new Date(2021,8,21,20,00,00),-19.8227963346402,null],
 		        [new Date(2021,8,21,19,00,00),-19.8112670714988,null],
 		        [new Date(2021,8,21,18,00,00),-19.8312030890141,null],
@@ -426,6 +428,7 @@
         data_i1.addColumn({type:'string',role:'annotation'});
         data_i1.addRows(
             [
+//             	${test}
                 [0,2.83,null],
                 [-2,2.90,'max : 2.90mm'], //최대 변위만 표시할것
                 [-4,1.95,null],
@@ -470,9 +473,7 @@
 			alert(status); 
 			return false; 
 		} 
-	} 
-	
-	var referrer = document.referrer;
+	}
 </script>
 
 

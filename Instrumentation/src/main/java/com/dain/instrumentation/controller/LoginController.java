@@ -41,14 +41,16 @@ public class LoginController {
 		System.out.println("login proc");
 		
 		//임의로 지정 - 후에 제대로된 DB까지 생성하면 DB에서 받아오는 것으로
-		String correctId = "pangyothesharp";
-		String correctPw = "pangyothesharp";
+		String correctId = "admin";
+		String correctPw = "admin1234";
 		
 		mav = new ModelAndView();
 //		System.out.println("login=" + user_id + ", pw=" + user_pw + ", pageName=" + pageName + ", pageKorName=" + pageKorName);
 		logger.info("Welcome home! The client locale is {}.", locale);
 		
-		if(user_id.equals(correctId) && user_pw.equals(correctPw)) {
+		//이 if의 조건문을 SVC로 구현해야됨.
+		if((user_id.equals(correctId) && user_pw.equals(correctPw)) || (user_id.equals(pageName) && user_pw.equals(pageName))) {
+			//
 			UserVO user = new UserVO();
 			ses.setAttribute("user", user);
 			mav.setViewName("redirect:/" + pageName);

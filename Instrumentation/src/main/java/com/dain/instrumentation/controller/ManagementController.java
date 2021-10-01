@@ -49,7 +49,8 @@ public class ManagementController {
 	
 	// 기본 화면 in
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ModelAndView home(Locale locale, Model model) {
+	public ModelAndView home(Locale locale) {
+//	public ModelAndView home(Locale locale, Model model) {
 		logger.info("Welcome home! The client locale is {}.", locale);
 		
 		String topNavHtml ="";
@@ -71,16 +72,20 @@ public class ManagementController {
 		mainContHtml = mSvc.getMainContHtml(spList, cpList);
 		//모달 내용
 		modalContHtml = mSvc.getModalContHtml();
-
-		model.addAttribute("spList", spList);
-		model.addAttribute("cpList", cpList);
-		model.addAttribute("topNav", topNavHtml);
-		model.addAttribute("mainCont", mainContHtml);
-		model.addAttribute("modalCont", modalContHtml);
+		
+//		model.addAttribute("spList", spList);
+//		model.addAttribute("cpList", cpList);
+//		model.addAttribute("topNav", topNavHtml);
+//		model.addAttribute("mainCont", mainContHtml);
+//		model.addAttribute("modalCont", modalContHtml);
 		mav = new ModelAndView();
+		mav.addObject("spList", spList);
+		mav.addObject("cpList", cpList);
+		mav.addObject("topNav", topNavHtml);
+		mav.addObject("mainCont", mainContHtml);
+		mav.addObject("modalCont", modalContHtml);
 		mav.setViewName("management/main");
 		System.out.println("management page in");
-		
 		return mav;
 	}
 
