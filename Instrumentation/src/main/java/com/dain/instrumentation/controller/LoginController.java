@@ -56,9 +56,7 @@ public class LoginController {
 			mav.setViewName("redirect:/" + pageName);
 			System.out.println(mav.getViewName());
 		} else {
-			mav.addObject("pageName",pageName);
-			mav.addObject("pageKorName",pageKorName);
-			mav.setViewName("./login/login");
+			mav.setViewName("redirect:/" + pageName);
 		}
 		return mav;
 	}

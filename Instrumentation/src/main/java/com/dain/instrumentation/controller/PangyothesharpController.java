@@ -17,8 +17,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.dain.instrumentation.model.dao.impl.getData.getDataDAO;
 import com.dain.instrumentation.model.dao.inf.getData.IGetDataDAO;
 import com.dain.instrumentation.model.vo.UserVO;
+import com.dain.instrumentation.model.vo.common.PlaceSetVO;
 import com.dain.instrumentation.model.vo.pangyothesharp.IPIVO;
 import com.dain.instrumentation.model.vo.pangyothesharp.SystemVO;
+import com.dain.instrumentation.model.vo.pangyothesharp.WaterSenResultVO;
 import com.dain.instrumentation.model.vo.pangyothesharp.WaterSenVO;
 import com.dain.instrumentation.service.impl.site.PangyothesharpSVCImpl;
 import com.dain.instrumentation.service.inf.ISiteSVC;
@@ -35,12 +37,18 @@ public class PangyothesharpController {
 		System.out.println("pangyothesharp페이지 in");
 		logger.info("Welcome home! The client locale is {}.", locale);
 		
-		
+		//사전 임시 지정문들
 		String pageName = "pangyothesharp";
 		String pageKorName = "판교TheSharp";
 		String[] systemName = {"시스템1","시스템2","시스템3","시스템4","시스템5"};
 		
 		String systemHtml = "";
+		String waterSenHtml = "";
+		String ipiSenHtml = "";
+		String waterSenJS = "";
+		String waterTableHtml = "";
+		String ipiSenJS = "";
+		String ipiTableHtml = "";
 		UserVO user = (UserVO)ses.getAttribute("user");
 		mav = new ModelAndView(); 
 		if(user==null) {
@@ -49,7 +57,6 @@ public class PangyothesharpController {
 			mav.setViewName("./login/login");
 			return mav;
 		} else {
-			mav.setViewName("pangyothesharp/main");
 			IGetDataDAO gddao = new getDataDAO();
 			ISiteSVC psvc = new PangyothesharpSVCImpl();
 			
@@ -59,14 +66,22 @@ public class PangyothesharpController {
 			List<SystemVO> syList = new ArrayList<SystemVO>();
 			syList = psvc.getSystemInitAndLast(lgList); //시스템 목록
 			
-			List<WaterSenVO> wsList = new ArrayList<WaterSenVO>();
+			List<PlaceSetVO> psList = new ArrayList<PlaceSetVO>();
+			psList = psvc.getPlaceSet(pageName); //설치된 센서 리스트
+
+			List<WaterSenResultVO> wsrList = new ArrayList<WaterSenResultVO>();
+			wsrList = psvc.getWaterSensers(psList); //출력할 수위계 리스트
 			
 			systemHtml = psvc.makeSystemHtml(syList, systemName);
+			waterSenHtml = psvc.makeWaterSenHtml(wsrList);
+			waterSenJS = psvc.makeWaterSenJS(wsrList);
+			waterTableHtml = psvc.makeWaterTableHtml(wsrList);
 			
-//			String test = "\r\n"
-//					+ "                [-2,1.11,null],";
-//			mav.addObject("test", test);
-			
+			mav.addObject("syshtml", systemHtml);
+			mav.addObject("wshtml", waterSenHtml);
+			mav.addObject("wsjs", waterSenJS);
+			mav.addObject("wtable", waterTableHtml);
+			mav.setViewName("pangyothesharp/main");
 			
 			return mav;
 		}

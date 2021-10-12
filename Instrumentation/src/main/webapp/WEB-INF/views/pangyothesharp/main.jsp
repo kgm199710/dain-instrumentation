@@ -12,7 +12,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
 	<!-- 새로고침 -->
-	<meta http-equiv="refresh" content="60"/>
+<!-- 	<meta http-equiv="refresh" content="60"/> -->
 	
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -109,12 +109,13 @@
 											</tr>
 										</thead>
 										<tbody>
-											<tr>
-												<td 정상이면 공란 데이터없으면bgcolor="#fcf8e3"><a href="./data/data_total?id=순서값&start=시작날짜&end=끝날짜" role="button"><strong>로거명</strong></a></td>
-												<td 정상이면 공란 데이터없으면bgcolor="#fcf8e3">최초시작시간</td>
-												<td 정상이면 공란 데이터없으면bgcolor="#fcf8e3">마지막기록된db시간</td>
-												<td 정상이면 공란 데이터없으면bgcolor="#fcf8e3"></td>
-											</tr>
+											${syshtml}
+<!-- 											<tr> -->
+<!-- 												<td 정상이면 공란 데이터없으면bgcolor="#fcf8e3"><a href="./data/data_total?id=순서값&start=시작날짜&end=끝날짜" role="button"><strong>로거명</strong></a></td> -->
+<!-- 												<td 정상이면 공란 데이터없으면bgcolor="#fcf8e3">최초시작시간</td> -->
+<!-- 												<td 정상이면 공란 데이터없으면bgcolor="#fcf8e3">마지막기록된db시간</td> -->
+<!-- 												<td 정상이면 공란 데이터없으면bgcolor="#fcf8e3"></td> -->
+<!-- 											</tr> -->
 										</tbody>
 									</table>
 								</div>
@@ -123,27 +124,27 @@
 							<div class="col-md-6 ">
 								<div class="table-responsive">
 									<table class="table text-center table-bordered">
-										<thead>
-											<tr bgcolor="#eeeeee">
-												<th class="text-center">구분</th>
-												<th class="text-center"><a href="#WL">수위계명</a></th>
-											</tr>
-										</thead>
-<!-- 										mv	|?	         |현재수위(m)          |/|/|/  -->
-										<tbody>
-											<tr>
-												<td class="text-center" bgcolor="#eeeeee">지하수위</td>
-												<td class="px-0">db3번항목</td>
-											</tr>
-											<tr>
-												<td class="text-center" bgcolor="#eeeeee">변화량</td>
-												<td class="px-0">db3번항목 첫째값에서 현재 값 빼기</td>
-											</tr>
-											<tr>
-												<td class="text-center" bgcolor="#eeeeee">일변화량</td>
-												<td class="px-0">(당일0시데이터)-(전날23시데이터)</td>
-											</tr>
-										</tbody>
+										${wshtml}
+<!-- 										<thead> -->
+<!-- 											<tr bgcolor="#eeeeee"> -->
+<!-- 												<th class="text-center">구분</th> -->
+<!-- 												<th class="text-center"><a href="#WL">수위계명</a></th> -->
+<!-- 											</tr> -->
+<!-- 										</thead> -->
+<!-- 										<tbody> -->
+<!-- 											<tr> -->
+<!-- 												<td class="text-center" bgcolor="#eeeeee">지하수위</td> -->
+<!-- 												<td class="px-0">db3번항목</td> -->
+<!-- 											</tr> -->
+<!-- 											<tr> -->
+<!-- 												<td class="text-center" bgcolor="#eeeeee">변화량</td> -->
+<!-- 												<td class="px-0">db3번항목 첫째값에서 현재 값 빼기</td> -->
+<!-- 											</tr> -->
+<!-- 											<tr> -->
+<!-- 												<td class="text-center" bgcolor="#eeeeee">일변화량</td> -->
+<!-- 												<td class="px-0">(당일0시데이터)-(전날23시데이터)</td> -->
+<!-- 											</tr> -->
+<!-- 										</tbody> -->
 									</table>
 								</div><!-- table-responsive -->
 								
@@ -182,35 +183,7 @@
 					</div>
 					<div class="card-body border border-secondary">
 						<div class="row">
-<!-- 							수위계반복시작 -->
-							<div class="col-md-6">
-								<!--차트만드는 코드?-->
-<%-- 								<div id = "차트명 아래 js와 연동해야됨" style="margin-bottom:10px;padding:1px;height:<?=$chart_height*1.5?>px; border: 1px solid #ccc;"></div> --%>
-<!-- 								차트 height는 변수로 임의설정해야됨 -->
-								<div id = "chart_1_w" style="margin-bottom:10px;padding:1px;height:331px; border: 1px solid #ccc;"></div>
-<!-- 								여기까지삽입 -->
-								<div class="table-responsive">
-									<table class="table text-center table-bordered">
-										<thead>
-											<tr bgcolor="#eeeeee">
-												<th class="text-center">식별코드</th>
-												<th class="text-center">수위</th>
-												<th class="text-center">변화량</th>
-												<th class="text-center">24시간변화량</th>
-												<th class="text-center">비고</th>
-											</tr>
-										</thead>
-										<tr>
-											<td><a href="수위계상세페이지" role="button" target="_blank"><strong>수위계명</strong></a></td>
-											<td>현재수위m</td>
-											<td>변화랑m</td>
-											<td>24시간변화량m</td>
-											<td></td>
-										</tr>
-									</table>
-								</div>
-							</div>
-<!-- 							수위계반복끝 -->
+							${wtable}
 						</div>
 					</div><!-- card-body -->
 				</div><!-- card -->
@@ -250,14 +223,7 @@
 <!-- 										해당센서(최근값 - 최초값) + 해당센서 이전까지의 값(0m에서 시작) + existing(기변위)값 -->
 										<td>누적변위 mm</td>
 										<td></td>
-									</tr>	
-									            <!--참조-->
-									<!-- <tr>
-									     <td>-</td>
-									     <td><?=$depth[$i][$a];?> m</td>
-									     <td><?=$cum_chg[$i][$a]?> mm</td>
-									     <td></td>
-									 </tr>-->
+									</tr>
 								</table>
 							</div>
 						</div>
@@ -336,43 +302,45 @@
 	};
 	//데이터입력 및 그리기 함수
 	function drawChart_w(){
+
+		${wsjs}
 		//데이터입력
-		var data_w1=new google.visualization.DataTable();
-		data_w1.addColumn('datetime','시간');
-		data_w1.addColumn('number','WL_01');
-		data_w1.addColumn({type:'string',role:'annotation'});
-		data_w1.addRows(
-		    [
-		        [new Date(2021,8,21,21,00,00),-19.7985848820432,'-19.80m'], //첫번째와 마지막값만 소수점2번째까지 출력
-		        [new Date(2021,8,21,20,00,00),-19.8227963346402,null],
-		        [new Date(2021,8,21,19,00,00),-19.8112670714988,null],
-		        [new Date(2021,8,21,18,00,00),-19.8312030890141,null],
-		        [new Date(2021,8,21,17,00,00),-19.7992093837967,null],
-		        [new Date(2021,8,21,16,00,00),-19.8014992235595,null],
-		        [new Date(2021,8,21,15,00,00),-19.8128843709117,null],
-		        [new Date(2021,8,21,14,00,00),-19.8239972995507,null],
-		        [new Date(2021,8,21,13,00,00),-19.7982005732719,null],
-		        [new Date(2021,8,21,12,00,00),-19.8020116352547,null],
-		        [new Date(2021,8,21,11,00,00),-19.8021317317458,null],
-		        [new Date(2021,8,21,10,00,00),-19.800114110696,null],
-		        [new Date(2021,8,21,09,00,00),-19.7923718902393,null],
-		        [new Date(2021,8,21,08,00,00),-19.7991853644985,null],
-		        [new Date(2021,8,21,07,00,00),-19.8081125370004,null],
-		        [new Date(2021,8,21,06,00,00),-19.8140853358222,null],
-		        [new Date(2021,8,21,05,00,00),-19.8172078445897,null],
-		        [new Date(2021,8,21,04,00,00),-19.8321078159134,null],
-		        [new Date(2021,8,21,03,00,00),-19.8142614773424,null],
-		        [new Date(2021,8,21,02,00,00),-19.8131565896247,null],
-		        [new Date(2021,8,21,01,00,00),-19.7826040423,null],
-		        [new Date(2021,8,21,00,00,00),-19.7814991545823,null],
-		        [new Date(2021,8,20,23,00,00),-19.7693614025529,null],
-		        [new Date(2021,8,20,22,00,00),-19.7957586112871,'-19.80m']
-		    ]
-		);
+// 		var data_w1=new google.visualization.DataTable();
+// 		data_w1.addColumn('datetime','시간');
+// 		data_w1.addColumn('number','WL_01');
+// 		data_w1.addColumn({type:'string',role:'annotation'});
+// 		data_w1.addRows(
+// 		    [
+// 		        [new Date(2021,08,21,21,00,00),-19.7985848820432,'-19.80m'], //첫번째와 마지막값만 소수점2번째까지 출력
+// 		        [new Date(2021,8,21,20,00,00),-19.8227963346402,null],
+// 		        [new Date(2021,8,21,19,00,00),-19.8112670714988,null],
+// 		        [new Date(2021,8,21,18,00,00),-19.8312030890141,null],
+// 		        [new Date(2021,8,21,17,00,00),-19.7992093837967,null],
+// 		        [new Date(2021,8,21,16,00,00),-19.8014992235595,null],
+// 		        [new Date(2021,8,21,15,00,00),-19.8128843709117,null],
+// 		        [new Date(2021,8,21,14,00,00),-19.8239972995507,null],
+// 		        [new Date(2021,8,21,13,00,00),-19.7982005732719,null],
+// 		        [new Date(2021,8,21,12,00,00),-19.8020116352547,null],
+// 		        [new Date(2021,8,21,11,00,00),-19.8021317317458,null],
+// 		        [new Date(2021,8,21,10,00,00),-19.800114110696,null],
+// 		        [new Date(2021,8,21,09,00,00),-19.7923718902393,null],
+// 		        [new Date(2021,8,21,08,00,00),-19.7991853644985,null],
+// 		        [new Date(2021,8,21,07,00,00),-19.8081125370004,null],
+// 		        [new Date(2021,8,21,06,00,00),-19.8140853358222,null],
+// 		        [new Date(2021,8,21,05,00,00),-19.8172078445897,null],
+// 		        [new Date(2021,8,21,04,00,00),-19.8321078159134,null],
+// 		        [new Date(2021,8,21,03,00,00),-19.8142614773424,null],
+// 		        [new Date(2021,8,21,02,00,00),-19.8131565896247,null],
+// 		        [new Date(2021,8,21,01,00,00),-19.7826040423,null],
+// 		        [new Date(2021,8,21,00,00,00),-19.7814991545823,null],
+// 		        [new Date(2021,8,20,23,00,00),-19.7693614025529,null],
+// 		        [new Date(2021,8,20,22,00,00),-19.7957586112871,'-19.80m']
+// 		    ]
+// 		);
 		
-		//차트그리기
-		var chart_w1=new google.visualization.LineChart(document.getElementById('chart_1_w'));
-		chart_w1.draw(data_w1,options_w);
+// 		//차트그리기
+// 		var chart_w1=new google.visualization.LineChart(document.getElementById('chart_1_w'));
+// 		chart_w1.draw(data_w1,options_w);
 		window.addEventListener('resize',drawChart_w,false);
 	};
 
