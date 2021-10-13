@@ -102,10 +102,6 @@ public class PangyothesharpSVCImpl implements ISiteSVC {
 		List<PlaceSetVO> psList = new ArrayList<PlaceSetVO>();
 		gdDao = new getDataDAO();
 		psList = gdDao.ReadPlaceSet(pageName);
-		//출력값 확인
-//		for (PlaceSetVO ps : psList) {
-//			System.out.println(ps);
-//		}
 		return psList;
 	}
 	
@@ -202,7 +198,7 @@ public class PangyothesharpSVCImpl implements ISiteSVC {
 					+ "		        [new Date(" + maketime(wsList.get(i).getB12().getTime()) + ")," + wsList.get(i).getB12().getLevel() + ",null],\r\n"
 					+ "		        [new Date(" + maketime(wsList.get(i).getB11().getTime()) + ")," + wsList.get(i).getB11().getLevel() + ",null],\r\n"
 					+ "		        [new Date(" + maketime(wsList.get(i).getB10().getTime()) + ")," + wsList.get(i).getB10().getLevel() + ",null],\r\n"
-					+ "		        [new Date(" + maketime(wsList.get(i).getB2().getTime()) + ")," + wsList.get(i).getB9().getLevel() + ",null],\r\n"
+					+ "		        [new Date(" + maketime(wsList.get(i).getB9().getTime()) + ")," + wsList.get(i).getB9().getLevel() + ",null],\r\n"
 					+ "		        [new Date(" + maketime(wsList.get(i).getB8().getTime()) + ")," + wsList.get(i).getB8().getLevel() + ",null],\r\n"
 					+ "		        [new Date(" + maketime(wsList.get(i).getB7().getTime()) + ")," + wsList.get(i).getB7().getLevel() + ",null],\r\n"
 					+ "		        [new Date(" + maketime(wsList.get(i).getB6().getTime()) + ")," + wsList.get(i).getB6().getLevel() + ",null],\r\n"
@@ -270,6 +266,27 @@ public class PangyothesharpSVCImpl implements ISiteSVC {
 		}
 //		System.out.println(waterTableHtml);
 		return waterTableHtml;
+	}
+	
+	@Override
+	public List<PlaceSetVO> branchIPIPlaceSet(List<PlaceSetVO> psList) {
+		List<PlaceSetVO> psIpiList = new ArrayList<PlaceSetVO>();
+		for (PlaceSetVO ps : psList) {
+			if(ps.getSen_type().equals("IPI")){
+				psIpiList.add(ps);
+			}
+		}
+		return psIpiList;
+	}
+	
+	@Override
+	public String makeIPISenHtml(List<PlaceSetVO> psIpiList) {
+		String ipiSenHtml = "";
+		for (int i = 0; i < psIpiList.size(); i++) {
+			System.out.println(psIpiList.get(i));
+		}
+		
+		return ipiSenHtml;
 	}
 	
 }

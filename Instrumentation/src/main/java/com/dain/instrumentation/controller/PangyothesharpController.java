@@ -71,17 +71,23 @@ public class PangyothesharpController {
 
 			List<WaterSenResultVO> wsrList = new ArrayList<WaterSenResultVO>();
 			wsrList = psvc.getWaterSensers(psList); //출력할 수위계 리스트
+
+			List<PlaceSetVO> psIpiList = new ArrayList<PlaceSetVO>();
+			psIpiList = psvc.branchIPIPlaceSet(psList);
 			
 			systemHtml = psvc.makeSystemHtml(syList, systemName);
 			waterSenHtml = psvc.makeWaterSenHtml(wsrList);
 			waterSenJS = psvc.makeWaterSenJS(wsrList);
 			waterTableHtml = psvc.makeWaterTableHtml(wsrList);
+			ipiSenHtml = psvc.makeIPISenHtml(psIpiList);
 			
 			mav.addObject("syshtml", systemHtml);
 			mav.addObject("wshtml", waterSenHtml);
 			mav.addObject("wsjs", waterSenJS);
 			mav.addObject("wtable", waterTableHtml);
+			
 			mav.setViewName("pangyothesharp/main");
+			ses.setAttribute("user", user);
 			
 			return mav;
 		}

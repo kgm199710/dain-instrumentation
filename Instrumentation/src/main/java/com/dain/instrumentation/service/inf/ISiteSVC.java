@@ -24,4 +24,8 @@ public interface ISiteSVC {
 
 	String makeWaterTableHtml(List<WaterSenResultVO> wsrList);
 
+	List<PlaceSetVO> branchIPIPlaceSet(List<PlaceSetVO> psList);
+
+	String makeIPISenHtml(List<PlaceSetVO> psIpiList);
+
 }

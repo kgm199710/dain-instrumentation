@@ -209,7 +209,7 @@ public class getDataDAO implements IGetDataDAO {
 			wsr.setB22(wsList.get(23));
 			wsr.setB23(wsList.get(24));
 		} catch (SQLException e) {
-			System.out.println("ReadPlaceSet(String lg)오류발생");
+			System.out.println("ReadSensor(String logger, String name, int manageCal)오류발생");
 			e.printStackTrace();
 		}
 		DBConnection2.releasePstmt(pstmt);
