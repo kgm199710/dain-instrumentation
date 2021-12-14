@@ -1,3 +1,5 @@
+<%@page import="java.util.Map"%>
+<%@page import="java.util.List"%>
 <!-- 기본세팅 ~~ -->
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -28,7 +30,8 @@
 	<script type= "text/javascript">google.charts.load('current', {'packages':['corechart']});</script>
 	
 	<!-- 아이콘 -->
-	<script type="text/javascript" src="../libs/font-awesome/5.15.1/js/all.min.js"></script>
+	<script type="text/javascript" src="/resources/js/all.min.js"></script>
+	
 	
 	
 	<style>
@@ -43,6 +46,20 @@
 		visibility: hidden;
 	}
 	</style>
+	
+	<%@ page import = "com.dain.instrumentation.model.vo.pangyothesharp.IPIVO" %>
+	<%
+	List<IPIVO> ipi2List = (List<IPIVO>)request.getAttribute("ipi2List");
+	List<IPIVO> ipi3List = (List<IPIVO>)request.getAttribute("ipi3List");
+	List<IPIVO> ipi7List = (List<IPIVO>)request.getAttribute("ipi7List");
+	List<IPIVO> ipi11List = (List<IPIVO>)request.getAttribute("ipi11List");
+	List<IPIVO> ipi13List = (List<IPIVO>)request.getAttribute("ipi13List");
+	IPIVO ipi2max = (IPIVO)request.getAttribute("ipi2Max");
+	IPIVO ipi3max = (IPIVO)request.getAttribute("ipi3Max");
+	IPIVO ipi7max = (IPIVO)request.getAttribute("ipi7Max");
+	IPIVO ipi11max = (IPIVO)request.getAttribute("ipi11Max");
+	IPIVO ipi13max = (IPIVO)request.getAttribute("ipi13Max");
+	%>
 
 </head>
 <body style="margin-top:10px;"  data-spy="scroll" data-target=".navbar" data-offset="180">
@@ -110,12 +127,6 @@
 										</thead>
 										<tbody>
 											${syshtml}
-<!-- 											<tr> -->
-<!-- 												<td 정상이면 공란 데이터없으면bgcolor="#fcf8e3"><a href="./data/data_total?id=순서값&start=시작날짜&end=끝날짜" role="button"><strong>로거명</strong></a></td> -->
-<!-- 												<td 정상이면 공란 데이터없으면bgcolor="#fcf8e3">최초시작시간</td> -->
-<!-- 												<td 정상이면 공란 데이터없으면bgcolor="#fcf8e3">마지막기록된db시간</td> -->
-<!-- 												<td 정상이면 공란 데이터없으면bgcolor="#fcf8e3"></td> -->
-<!-- 											</tr> -->
 										</tbody>
 									</table>
 								</div>
@@ -125,26 +136,6 @@
 								<div class="table-responsive">
 									<table class="table text-center table-bordered">
 										${wshtml}
-<!-- 										<thead> -->
-<!-- 											<tr bgcolor="#eeeeee"> -->
-<!-- 												<th class="text-center">구분</th> -->
-<!-- 												<th class="text-center"><a href="#WL">수위계명</a></th> -->
-<!-- 											</tr> -->
-<!-- 										</thead> -->
-<!-- 										<tbody> -->
-<!-- 											<tr> -->
-<!-- 												<td class="text-center" bgcolor="#eeeeee">지하수위</td> -->
-<!-- 												<td class="px-0">db3번항목</td> -->
-<!-- 											</tr> -->
-<!-- 											<tr> -->
-<!-- 												<td class="text-center" bgcolor="#eeeeee">변화량</td> -->
-<!-- 												<td class="px-0">db3번항목 첫째값에서 현재 값 빼기</td> -->
-<!-- 											</tr> -->
-<!-- 											<tr> -->
-<!-- 												<td class="text-center" bgcolor="#eeeeee">일변화량</td> -->
-<!-- 												<td class="px-0">(당일0시데이터)-(전날23시데이터)</td> -->
-<!-- 											</tr> -->
-<!-- 										</tbody> -->
 									</table>
 								</div><!-- table-responsive -->
 								
@@ -153,18 +144,29 @@
 										<thead>
 											<tr bgcolor="#eeeeee">
 												<th class="text-center">구분</th>
-												<th class="text-center"><a href="#IPI명">IPI명</a></th>
+												<th class="text-center"><a href="#IPI-2">I-2</a></th>
+												<th class="text-center"><a href="#IPI-3">I-3</a></th>
+												<th class="text-center"><a href="#IPI-2">I-7</a></th>
+												<th class="text-center"><a href="#IPI-2">I-11</a></th>
+												<th class="text-center"><a href="#IPI-2">I-13</a></th>
 											</tr>
 										</thead>
-<!-- 										mv      |현재각도	   | 변위(mm)	   |/|/|/ -->
 										<tbody>
 											<tr>
 												<td class="text-center px-0" bgcolor="#eeeeee">최대변위</td>
-												<td class="px-0">해당 ipi그룹중 db3번항목중 가장 큰값</td>
+												<td class="px-0"><%= String.format("%.2f", ipi2max.getLevel()) %> mm</td>
+												<td class="px-0"><%= String.format("%.2f", ipi3max.getLevel()) %> mm</td>
+												<td class="px-0"><%= String.format("%.2f", ipi7max.getLevel()) %> mm</td>
+												<td class="px-0"><%= String.format("%.2f", ipi11max.getLevel()) %> mm</td>
+												<td class="px-0"><%= String.format("%.2f", ipi13max.getLevel()) %> mm</td>
 											</tr>
 											<tr>
 												<td class="text-center px-0" bgcolor="#eeeeee">최대변위지점</td>
-												<td class="px-0">윗항목의 ipi번호</td>
+												<td class="px-0"><%= ipi2max.getDepth() %> m</td>
+												<td class="px-0"><%= ipi3max.getDepth() %> m</td>
+												<td class="px-0"><%= ipi7max.getDepth() %> m</td>
+												<td class="px-0"><%= ipi11max.getDepth() %> m</td>
+												<td class="px-0"><%= ipi13max.getDepth() %> m</td>
 											</tr>
 										</tbody>
 									</table>
@@ -192,12 +194,11 @@
 			<div id="IPI-2"></div>
 			<div class="card mb-3">
 				<div class="card-header bg-secondary text-white border border-secondary pb-1">
-					<h5><i class="fas fa-chart-line text-warning"></i>&nbsp&nbsp<small>IPI</small></h5>
+					<h5><i class="fas fa-chart-line text-warning"></i>&nbsp&nbsp<small>IPI-2</small></h5>
 				</div>
 				<div class="card-body border border-secondary">
 					<div class="row">
 						<div class="col-md-6">
-<%-- 							<div id = "IPI차트명" style="margin-bottom:10px;padding:1px;height:<?=$chart_height*4?>px; border: 1px solid #ccc;"></div> --%>
 							<div id = "chart_1_ipi" style="margin-bottom:10px;padding:1px;height:840px; border: 1px solid #ccc;"></div>
 						</div>
 							 
@@ -217,11 +218,18 @@
 											<th class="text-center">비고</th>
 										</tr>
 									</thead>
+									<% for(int i=0; i<ipi2List.size(); i++){ %>
 									<tr>
-										<td><a href="IPI데이터웹페이지" role="button" target="_blank"><strong>IPI-2</strong></a></td>
-										<td>깊이 m</td>
-<!-- 										해당센서(최근값 - 최초값) + 해당센서 이전까지의 값(0m에서 시작) + existing(기변위)값 -->
-										<td>누적변위 mm</td>
+										<td><a href="IPI데이터웹페이지" role="button" target="_blank"><strong><%=ipi2List.get(i).getName() %></strong></a></td>
+										<td><%= ipi2List.get(i).getDepth() %> m</td>
+										<td><%= String.format("%.2f", ipi2List.get(i).getLevel()) %> mm</td>
+										<td></td>
+									</tr>
+									<% } %>
+									<tr>
+										<td>-</td>
+										<td>-36 m</td>
+										<td>0 mm</td>
 										<td></td>
 									</tr>
 								</table>
@@ -232,7 +240,198 @@
 				</div><!-- card-body -->
 			</div><!-- card -->
 <!-- 			ipi반복끝 -->
-		
+			<div id="IPI-3"></div>
+			<div class="card mb-3">
+				<div class="card-header bg-secondary text-white border border-secondary pb-1">
+					<h5><i class="fas fa-chart-line text-warning"></i>&nbsp&nbsp<small>IPI-3</small></h5>
+				</div>
+				<div class="card-body border border-secondary">
+					<div class="row">
+						<div class="col-md-6">
+							<div id = "chart_2_ipi" style="margin-bottom:10px;padding:1px;height:840px; border: 1px solid #ccc;"></div>
+						</div>
+							 
+						<div class="col-md-6">
+							<div class="table-responsive">
+								<table class="table text-center table-bordered">
+									<thead>
+										<tr bgcolor="#eeeeee">
+											<th class="text-center" colspan="4">
+												<a href="IPI상세페이지" role="button" target="_blank">지중경사계</a>
+											</th>
+										</tr>
+										<tr bgcolor="#eeeeee">
+											<th class="text-center">식별코드</th>
+											<th class="text-center">심도</th>
+											<th class="text-center">변위</th>
+											<th class="text-center">비고</th>
+										</tr>
+									</thead>
+									<tr>
+									<% for(int i=0; i<ipi3List.size(); i++){ %>
+									<tr>
+										<td><a href="IPI데이터웹페이지" role="button" target="_blank"><strong><%=ipi3List.get(i).getName() %></strong></a></td>
+										<td><%= ipi3List.get(i).getDepth() %> m</td>
+										<td><%= String.format("%.2f", ipi3List.get(i).getLevel()) %> mm</td>
+										<td></td>
+									</tr>
+									<% } %>
+									<tr>
+										<td>-</td>
+										<td>-38 m</td>
+										<td>0 mm</td>
+										<td></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div><!-- card-body -->
+			</div><!-- card -->
+			<div id="IPI-7"></div>
+			<div class="card mb-3">
+				<div class="card-header bg-secondary text-white border border-secondary pb-1">
+					<h5><i class="fas fa-chart-line text-warning"></i>&nbsp&nbsp<small>IPI-7</small></h5>
+				</div>
+				<div class="card-body border border-secondary">
+					<div class="row">
+						<div class="col-md-6">
+							<div id = "chart_3_ipi" style="margin-bottom:10px;padding:1px;height:840px; border: 1px solid #ccc;"></div>
+						</div>
+							 
+						<div class="col-md-6">
+							<div class="table-responsive">
+								<table class="table text-center table-bordered">
+									<thead>
+										<tr bgcolor="#eeeeee">
+											<th class="text-center" colspan="4">
+												<a href="IPI상세페이지" role="button" target="_blank">지중경사계</a>
+											</th>
+										</tr>
+										<tr bgcolor="#eeeeee">
+											<th class="text-center">식별코드</th>
+											<th class="text-center">심도</th>
+											<th class="text-center">변위</th>
+											<th class="text-center">비고</th>
+										</tr>
+									</thead>
+									<tr>
+									<% for(int i=0; i<ipi7List.size(); i++){ %>
+									<tr>
+										<td><a href="IPI데이터웹페이지" role="button" target="_blank"><strong><%=ipi7List.get(i).getName() %></strong></a></td>
+										<td><%= ipi7List.get(i).getDepth() %> m</td>
+										<td><%= String.format("%.2f", ipi7List.get(i).getLevel()) %> mm</td>
+										<td></td>
+									</tr>
+									<% } %>
+									<tr>
+										<td>-</td>
+										<td>-40 m</td>
+										<td>0 mm</td>
+										<td></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div><!-- card-body -->
+			</div><!-- card -->
+			<div id="IPI-11"></div>
+			<div class="card mb-3">
+				<div class="card-header bg-secondary text-white border border-secondary pb-1">
+					<h5><i class="fas fa-chart-line text-warning"></i>&nbsp&nbsp<small>IPI-11</small></h5>
+				</div>
+				<div class="card-body border border-secondary">
+					<div class="row">
+						<div class="col-md-6">
+							<div id = "chart_4_ipi" style="margin-bottom:10px;padding:1px;height:840px; border: 1px solid #ccc;"></div>
+						</div>
+							 
+						<div class="col-md-6">
+							<div class="table-responsive">
+								<table class="table text-center table-bordered">
+									<thead>
+										<tr bgcolor="#eeeeee">
+											<th class="text-center" colspan="4">
+												<a href="IPI상세페이지" role="button" target="_blank">지중경사계</a>
+											</th>
+										</tr>
+										<tr bgcolor="#eeeeee">
+											<th class="text-center">식별코드</th>
+											<th class="text-center">심도</th>
+											<th class="text-center">변위</th>
+											<th class="text-center">비고</th>
+										</tr>
+									</thead>
+									<tr>
+									<% for(int i=0; i<ipi11List.size(); i++){ %>
+									<tr>
+										<td><a href="IPI데이터웹페이지" role="button" target="_blank"><strong><%=ipi11List.get(i).getName() %></strong></a></td>
+										<td><%= ipi11List.get(i).getDepth() %> m</td>
+										<td><%= String.format("%.2f", ipi11List.get(i).getLevel()) %> mm</td>
+										<td></td>
+									</tr>
+									<% } %>
+									<tr>
+										<td>-</td>
+										<td>-32 m</td>
+										<td>0 mm</td>
+										<td></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div><!-- card-body -->
+			</div><!-- card -->
+			<div id="IPI-13"></div>
+			<div class="card mb-3">
+				<div class="card-header bg-secondary text-white border border-secondary pb-1">
+					<h5><i class="fas fa-chart-line text-warning"></i>&nbsp&nbsp<small>IPI-13</small></h5>
+				</div>
+				<div class="card-body border border-secondary">
+					<div class="row">
+						<div class="col-md-6">
+							<div id = "chart_5_ipi" style="margin-bottom:10px;padding:1px;height:840px; border: 1px solid #ccc;"></div>
+						</div>
+							 
+						<div class="col-md-6">
+							<div class="table-responsive">
+								<table class="table text-center table-bordered">
+									<thead>
+										<tr bgcolor="#eeeeee">
+											<th class="text-center" colspan="4">
+												<a href="IPI상세페이지" role="button" target="_blank">지중경사계</a>
+											</th>
+										</tr>
+										<tr bgcolor="#eeeeee">
+											<th class="text-center">식별코드</th>
+											<th class="text-center">심도</th>
+											<th class="text-center">변위</th>
+											<th class="text-center">비고</th>
+										</tr>
+									</thead>
+									<tr>
+									<% for(int i=0; i<ipi13List.size(); i++){ %>
+									<tr>
+										<td><a href="IPI데이터웹페이지" role="button" target="_blank"><strong><%=ipi13List.get(i).getName() %></strong></a></td>
+										<td><%= ipi13List.get(i).getDepth() %> m</td>
+										<td><%= String.format("%.2f", ipi13List.get(i).getLevel()) %> mm</td>
+										<td></td>
+									</tr>
+									<% } %>
+									<tr>
+										<td>-</td>
+										<td>-34 m</td>
+										<td>0 mm</td>
+										<td></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div><!-- card-body -->
+			</div><!-- card -->
 		</div><!-- content -->
 	
 	</div><!-- container -->
@@ -396,52 +595,119 @@
         data_i1.addColumn({type:'string',role:'annotation'});
         data_i1.addRows(
             [
-//             	${test}
-                [0,2.83,null],
-                [-2,2.90,'max : 2.90mm'], //최대 변위만 표시할것
-                [-4,1.95,null],
-                [-6,0.24,null],
-                [-8,1.01,null],
-                [-10,1.32,null],
-                [-12,1.66,null],
-                [-14,1.34,null],
-                [-16,0.04,null],
-                [-18,0.92,null],
-                [-20,1.07,null],
-                [-22,0.52,null],
-                [-24,0.42,null],
-                [-26,0.28,null],
-                [-28,0.20,null],
-                [-30,-0.08,null],
-                [-32,0.43,null],
-                [-34,0.08,null],
-                [-36,0,null]
+          	<%
+          	for(int i=0; i<ipi2List.size(); i++){ 
+          		if(ipi2List.get(i).getDepth() == ipi2max.getDepth()){ %>
+          		[<%=ipi2List.get(i).getDepth()%>,<%=ipi2List.get(i).getLevel()%>,'max: <%= String.format("%.2f", ipi2max.getLevel())%>mm'],
+          	<%	} else{ %> 	
+          		[<%=ipi2List.get(i).getDepth()%>,<%=ipi2List.get(i).getLevel()%>,null],
+            <%	}
+   			}%>
+            	[-36,0,null]
             ]
         );
+        var data_i2=new google.visualization.DataTable();
+        data_i2.addColumn('number','depth(m)');
+        data_i2.addColumn('number','change');
+        data_i2.addColumn({type:'string',role:'annotation'});
+        data_i2.addRows(
+            [
+          	<%
+          	for(int i=0; i<ipi3List.size(); i++){ 
+          		if(ipi3List.get(i).getDepth() == ipi3max.getDepth()){ %>
+          		[<%=ipi3List.get(i).getDepth()%>,<%=ipi3List.get(i).getLevel()%>,'max: <%= String.format("%.2f", ipi3max.getLevel())%>mm'],
+          	<%	} else{ %> 	
+          		[<%=ipi3List.get(i).getDepth()%>,<%=ipi3List.get(i).getLevel()%>,null],
+            <%	}
+   			}%>
+            	[-38,0,null]
+            ]
+        );
+        var data_i3=new google.visualization.DataTable();
+        data_i3.addColumn('number','depth(m)');
+        data_i3.addColumn('number','change');
+        data_i3.addColumn({type:'string',role:'annotation'});
+        data_i3.addRows(
+            [
+          	<%
+          	for(int i=0; i<ipi7List.size(); i++){ 
+          		if(ipi7List.get(i).getDepth() == ipi7max.getDepth()){ %>
+          		[<%=ipi7List.get(i).getDepth()%>,<%=ipi7List.get(i).getLevel()%>,'max: <%= String.format("%.2f", ipi7max.getLevel())%>mm'],
+          	<%	} else{ %> 	
+          		[<%=ipi7List.get(i).getDepth()%>,<%=ipi7List.get(i).getLevel()%>,null],
+            <%	}
+   			}%>
+            	[-40,0,null]
+            ]
+        );
+        var data_i4=new google.visualization.DataTable();
+        data_i4.addColumn('number','depth(m)');
+        data_i4.addColumn('number','change');
+        data_i4.addColumn({type:'string',role:'annotation'});
+        data_i4.addRows(
+            [
+          	<%
+          	for(int i=0; i<ipi11List.size(); i++){ 
+          		if(ipi11List.get(i).getDepth() == ipi11max.getDepth()){ %>
+          		[<%=ipi11List.get(i).getDepth()%>,<%=ipi11List.get(i).getLevel()%>,'max: <%= String.format("%.2f", ipi11max.getLevel())%>mm'],
+          	<%	} else{ %> 	
+          		[<%=ipi11List.get(i).getDepth()%>,<%=ipi11List.get(i).getLevel()%>,null],
+            <%	}
+   			}%>
+            	[-32,0,null]
+            ]
+        );
+        var data_i5=new google.visualization.DataTable();
+        data_i5.addColumn('number','depth(m)');
+        data_i5.addColumn('number','change');
+        data_i5.addColumn({type:'string',role:'annotation'});
+        data_i5.addRows(
+            [
+          	<%
+          	for(int i=0; i<ipi13List.size(); i++){ 
+          		if(ipi13List.get(i).getDepth() == ipi13max.getDepth()){ %>
+          		[<%=ipi13List.get(i).getDepth()%>,<%=ipi13List.get(i).getLevel()%>,'max: <%= String.format("%.2f", ipi13max.getLevel())%>mm'],
+          	<%	} else{ %> 	
+          		[<%=ipi13List.get(i).getDepth()%>,<%=ipi13List.get(i).getLevel()%>,null],
+            <%	}
+   			}%>
+            	[-32,0,null]
+            ]
+        );
+        
+
         var chart_i1=new google.visualization.LineChart(document.getElementById('chart_1_ipi'));
+        var chart_i2=new google.visualization.LineChart(document.getElementById('chart_2_ipi'));
+        var chart_i3=new google.visualization.LineChart(document.getElementById('chart_3_ipi'));
+        var chart_i4=new google.visualization.LineChart(document.getElementById('chart_4_ipi'));
+        var chart_i5=new google.visualization.LineChart(document.getElementById('chart_5_ipi'));
         chart_i1.draw(data_i1,option_i);
+        chart_i2.draw(data_i2,option_i);
+        chart_i3.draw(data_i3,option_i);
+        chart_i4.draw(data_i4,option_i);
+        chart_i5.draw(data_i5,option_i);
         window.addEventListener('resize',drawChart_ipi,false);}
 </script>
 
 <script type="text/javascript"> 
-	// F12 버튼 방지 
-	$(document).ready(function(){ 
-		$(document).bind('keydown',function(e){ 
-			if ( e.keyCode == 123 /* F12 */) { 
-				e.preventDefault(); 
-				e.returnValue = false; 
-			} 
-		}); 
-	}); 
-	// 우측 클릭 방지 
-	document.onmousedown=disableclick; 
-	status="Right click is not available."; 
-	function disableclick(event){ 
-		if (event.button==2) { 
-			alert(status); 
-			return false; 
-		} 
-	}
+// 	// F12 버튼 방지 
+// 	$(document).ready(function(){ 
+// 		$(document).bind('keydown',function(e){ 
+// 			if ( e.keyCode == 123 /* F12 */) { 
+// 				e.preventDefault(); 
+// 				e.returnValue = false; 
+// 			} 
+// 		}); 
+// 	}); 
+// 	// 우측 클릭 방지 
+// 	document.onmousedown=disableclick; 
+// 	status="Right click is not available."; 
+// 	function disableclick(event){ 
+// 		if (event.button==2) { 
+// 			alert(status); 
+// 			return false; 
+// 		} 
+// 	}
 </script>
 
 

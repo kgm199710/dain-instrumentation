@@ -4,15 +4,15 @@ public class IPIVO {
 	String name;
 	float level;
 	String time;
-	String depth;
+	int depth;
 
 	//basic constructor
 	public IPIVO() {}
-	public IPIVO(String name, float level, String time) {
-		this(name, level, time, null);
+	public IPIVO(String name, float level, int depth) {
+		this(name, level, null, depth);
 	}
 	//full constructor
-	public IPIVO(String name, float level, String time, String depth) {
+	public IPIVO(String name, float level, String time, int depth) {
 		super();
 		this.name = name;
 		this.level = level;
@@ -40,10 +40,10 @@ public class IPIVO {
 	public void setTime(String time) {
 		this.time = time;
 	}
-	public String getDepth() {
+	public int getDepth() {
 		return depth;
 	}
-	public void setDepth(String depth) {
+	public void setDepth(int depth) {
 		this.depth = depth;
 	}
 	

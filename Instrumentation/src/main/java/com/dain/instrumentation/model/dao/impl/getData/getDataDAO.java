@@ -3,21 +3,28 @@ package com.dain.instrumentation.model.dao.impl.getData;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.dain.instrumentation.model.dao.inf.getData.IGetDataDAO;
 import com.dain.instrumentation.model.vo.common.PlaceSetVO;
+import com.dain.instrumentation.model.vo.pangyothesharp.IPIVO;
 import com.dain.instrumentation.model.vo.pangyothesharp.SystemVO;
 import com.dain.instrumentation.model.vo.pangyothesharp.WaterSenResultVO;
 import com.dain.instrumentation.model.vo.pangyothesharp.WaterSenVO;
+import com.dain.instrumentation.model.vo.pangyothesharp.pangyothesharp1VO;
 import com.dain.instrumentation.util.DBConnection2;
 
 
 public class getDataDAO implements IGetDataDAO {
 
-	final String SQL_READ_LOGGERNAME = "SELECT logger_name FROM logger WHERE logger_name=?";
 	final String SQL_READ_LOGGERNAMES = "SELECT logger_name FROM logger WHERE logger_name LIKE ?";
 	final String SQL_READ_SYSTEM = "SELECT dyear, dmonth, dday, dtime FROM ";
 	final String SQL_READ_SYSTEM_INIT = " ORDER BY t_date asc LIMIT 1";
@@ -26,19 +33,20 @@ public class getDataDAO implements IGetDataDAO {
 	final String SQL_READ_PLACESET = "SELECT * FROM place_set WHERE logger_name LIKE ?";
 	final String SQL_READ_SENSORS_1 = "SELECT t_date, ";
 	final String SQL_READ_SENSORS_2 = "_1 FROM ";
-	final String SQL_READ_SENSORS_3 = " ORDER BY t_date ASC LIMIT 1";
-	final String SQL_READ_SENSORS_4 = " ORDER BY t_date DESC LIMIT 24";
+	final String SQL_READ_T_DATE_ASC = " ORDER BY t_date ASC LIMIT 1";
+	final String SQL_READ_T_DATE_DESC = " ORDER BY t_date DESC LIMIT 24";
+
+	final String SQL_READ_SELECT = "SELECT ";
+	final String SQL_READ_FROM = " FROM ";
+	final String SQL_READ_ORDERBY = " ORDER BY ";
+	final String SQL_READ_LIMIT_1 = " LIMIT 1"; 
+	
+	final String SQL_READ_ONE_SYSTEM_DATA = " where t_date BETWEEN ? AND ? ORDER BY t_date desc";
 	
 	
 	private Connection conn;
 	private PreparedStatement pstmt;
 	private ResultSet rs;
-
-	@Override
-	public String getTableName(String tbName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public List<String> ReadTableNames(String tbName) {
@@ -167,15 +175,14 @@ public class getDataDAO implements IGetDataDAO {
 		WaterSenResultVO wsr = new WaterSenResultVO();
 		List<WaterSenVO> wsList = new ArrayList<WaterSenVO>();
 		try {
-			String sql = SQL_READ_SENSORS_1 + name + SQL_READ_SENSORS_2 + logger + SQL_READ_SENSORS_3;
-			System.out.println(sql);
+			String sql = SQL_READ_SENSORS_1 + name + SQL_READ_SENSORS_2 + logger + SQL_READ_T_DATE_ASC;
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				WaterSenVO ws = new WaterSenVO(name, rs.getString(1), rs.getString(2).split("\\|")[manageCal-1]);
 				wsList.add(ws);
 			}
-			sql = SQL_READ_SENSORS_1 + name + SQL_READ_SENSORS_2 + logger + SQL_READ_SENSORS_4;
+			sql = SQL_READ_SENSORS_1 + name + SQL_READ_SENSORS_2 + logger + SQL_READ_T_DATE_DESC;
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
@@ -216,5 +223,281 @@ public class getDataDAO implements IGetDataDAO {
 		DBConnection2.releaseRS(rs);
 		DBConnection2.terminateDB();
 		return wsr;
+	}
+	
+	@Override
+	public List<IPIVO> ReadIpiData(String[] ipiName, int[] depth, String logger, String order, int manageCalIndex) {
+		List<IPIVO> ipiList = new ArrayList<IPIVO>();
+		conn = DBConnection2.getConn();
+		String ipiNames = "";
+		for (int i = 0; i < ipiName.length; i++) {
+			ipiNames += ipiName[i] + ((i==ipiName.length-1)?"_1 ":"_1, ");
+		}
+		String sql = SQL_READ_SELECT + ipiNames + SQL_READ_FROM + logger + SQL_READ_ORDERBY + order + SQL_READ_LIMIT_1;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			int num = 0;
+			while (rs.next()) {
+				for (int i = 0; i < ipiName.length; i++) {
+					String strLevel = rs.getString(i+1).split("\\|")[manageCalIndex-1];
+					float level = Float.parseFloat(strLevel);
+					IPIVO ipi = new IPIVO(ipiName[num], level, depth[num]);
+					ipiList.add(ipi);
+					num++;
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("ReadIpiData(String[] ipiName, int[] depth, String logger, String order, int manageCalIndex) 오류");
+			e.printStackTrace();
+		}
+
+		DBConnection2.releasePstmt(pstmt);
+		DBConnection2.releaseRS(rs);
+		DBConnection2.terminateDB();
+		return ipiList;
+	}
+	
+	
+	@Override
+	public List<String> ReadColumns(String logger) {
+		List<String> result = new ArrayList<String>();
+		conn = DBConnection2.getConn();
+		String sql = SQL_READ_SELECT + "* " + SQL_READ_FROM + logger;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			ResultSetMetaData rsmd = rs.getMetaData();
+			int colCnt = rsmd.getColumnCount();
+			if(rs.next()) {
+				for (int i = 1; i <=colCnt; i++) {
+					result.add(rsmd.getColumnName(i));
+//					System.out.println(rsmd.getColumnName(i));
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("ReadColumns(String logger) 오류");
+			e.printStackTrace();
+		}
+
+		DBConnection2.releasePstmt(pstmt);
+		DBConnection2.releaseRS(rs);
+		DBConnection2.terminateDB();
+		return result;
+	}
+	
+	@Override
+	public String[] ReadSystemFirst(String logger, String[] columns, Map<String, Integer> manageCalIndex) {
+		String[] result = new String[columns.length];
+		conn = DBConnection2.getConn();
+		String columnStr = "t_date";
+		for (int i = 1; i < columns.length; i++) {
+			columnStr = columnStr + "," + columns[i] + "_1";
+		}
+		String sql = SQL_READ_SELECT + columnStr + " " + SQL_READ_FROM + logger + SQL_READ_T_DATE_ASC;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				for (int i = 0; i < columns.length; i++) {
+					if(i==0) {
+						result[i] = rs.getString(i+1);
+					} else {
+						String[] data = rs.getString(i+1).split("[|]");
+						int num = manageCalIndex.get(columns[i])-1;
+						result[i] = data[num];
+					}
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("ReadSystemFirst(String logger, String[] columns) 오류");
+			e.printStackTrace();
+		}
+		
+		DBConnection2.releasePstmt(pstmt);
+		DBConnection2.releaseRS(rs);
+		DBConnection2.terminateDB();
+		return result;
+	}
+	
+	@Override
+	public List<String[]> ReadSysteamDatas(String logger, String[] columns, Map<String, Integer> manageCalIndex, String start, String end) {
+		List<String[]> result = new ArrayList<String[]>();
+		conn = DBConnection2.getConn();
+		String columnStr = "t_date";
+		for (int i = 1; i < columns.length; i++) {
+			columnStr = columnStr + "," + columns[i] + "_1";
+		}
+		String sql = SQL_READ_SELECT + columnStr + " " + SQL_READ_FROM + logger + SQL_READ_ONE_SYSTEM_DATA;
+//		System.out.println(sql);
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, start);
+			pstmt.setString(2, end);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				String[] oneData = new String[columns.length];
+				for (int i = 0; i < columns.length; i++) {
+					if(i==0) {
+						oneData[i] = rs.getString(i+1);
+					} else {
+						String[] data = rs.getString(i+1).split("[|]");
+						int num = manageCalIndex.get(columns[i])-1;
+						oneData[i] = data[num];
+					}
+				}
+				result.add(oneData);
+			}
+		} catch (SQLException e) {
+			System.out.println("ReadSysteamDatas(String logger, String[] columns, Map<String, Integer> manageCalIndex, String[] first, String start, String end) 오류");
+			e.printStackTrace();
+		}
+		
+
+		DBConnection2.releasePstmt(pstmt);
+		DBConnection2.releaseRS(rs);
+		DBConnection2.terminateDB();
+		return result;
+	}
+	
+	@Override
+	public String readWlFirst(PlaceSetVO senInfo) {
+		String result = "";
+		conn = DBConnection2.getConn();
+		String sql = SQL_READ_SELECT + senInfo.getSen_name() + SQL_READ_SENSORS_2 + senInfo.getLogger_name() + SQL_READ_T_DATE_ASC;
+//		System.out.println(sql);
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				System.out.println(rs.getString(1) + " / " + senInfo.getManage_cal_index());
+				String[] data = rs.getString(1).split("[|]");
+				result = data[senInfo.getManage_cal_index()-1];
+			}
+		} catch (SQLException e) {
+			System.out.println("readWlFirst(PlaceSetVO senInfo) 실패");
+			e.printStackTrace();
+		}
+		
+		DBConnection2.releasePstmt(pstmt);
+		DBConnection2.releaseRS(rs);
+		DBConnection2.terminateDB();
+		return result;
+	}
+	
+	@Override
+	public List<String[]> ReadWlDatas(PlaceSetVO senInfo, String start, String end, String[] outputColumns) {
+		List<String[]> result = new ArrayList<String[]>();
+		String[] datas;
+		conn = DBConnection2.getConn();
+		String sql = SQL_READ_SENSORS_1 + senInfo.getSen_name() + SQL_READ_SENSORS_2 + senInfo.getLogger_name() + SQL_READ_ONE_SYSTEM_DATA;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, start);
+			pstmt.setString(2, end);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				datas = new String[outputColumns.length];
+				datas[0] = rs.getString(1);
+				String[] data = rs.getString(2).split("[|]");
+				datas[1] = data[0];
+				datas[2] = data[senInfo.getManage_cal_index()-1];
+				datas[3] = data[senInfo.getManage_cal_index()-1];
+//				for (int i = 1; i < datas.length; i++) {
+//					if(i==outputColumns.length-3) {
+//						//{"측정시간","측정값(mV)","각도(degree)","변화량(mm)","비고"}
+//						datas[i] = data[senInfo.getManage_cal_index()-1];
+//						datas[i+1] = data[senInfo.getManage_cal_index()-1];
+//					} else {
+//					}	 
+//				}
+				result.add(datas);
+			}
+		} catch (SQLException e) {
+			System.out.println("ReadWlDatas(PlaceSetVO senInfo, String start, String end, String first, String[] outputColumns) 실패");
+			e.printStackTrace();
+		}
+		
+		DBConnection2.releasePstmt(pstmt);
+		DBConnection2.releaseRS(rs);
+		DBConnection2.terminateDB();
+		return result;
+	}
+	
+	@Override
+	public String[] ReadIpiFirst(String logger, String[] columns, Map<String, Integer> manageCalIndex) {
+		String[] result = new String[columns.length+1];
+		conn = DBConnection2.getConn();
+		String columnStr = "t_date";
+		for (int i = 0; i < columns.length; i++) {
+			columnStr = columnStr + "," + columns[i] + "_1";
+		}
+		String sql = SQL_READ_SELECT + columnStr + " " + SQL_READ_FROM + logger + SQL_READ_T_DATE_ASC;
+//		System.out.println(sql);
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				for (int i = 0; i < columns.length+1; i++) {
+					if(i==0) {
+						result[i] = rs.getString(i+1);
+					} else {
+						String[] data = rs.getString(i+1).split("[|]");
+						int num = manageCalIndex.get(columns[i-1])-1;
+						result[i] = data[num];
+					}
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("ReadSystemFirst(String logger, String[] columns) 오류");
+			e.printStackTrace();
+		}
+		
+		DBConnection2.releasePstmt(pstmt);
+		DBConnection2.releaseRS(rs);
+		DBConnection2.terminateDB();
+		return result;
+	}
+	
+	@Override
+	public List<String[]> ReadIpiDatas(String logger, String[] columns, Map<String, Integer> manageCalIndex, String start, String end) {
+		List<String[]> result = new ArrayList<String[]>();
+		conn = DBConnection2.getConn();
+		String columnStr = "t_date";
+		for (int i = 0; i < columns.length; i++) {
+			columnStr = columnStr + "," + columns[i] + "_1";
+		}
+		String sql = SQL_READ_SELECT + columnStr + " " + SQL_READ_FROM + logger + SQL_READ_ONE_SYSTEM_DATA;
+//		System.out.println(sql);
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, start);
+			pstmt.setString(2, end);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				String[] oneData = new String[columns.length+1];
+				for (int i = 0; i < columns.length+1; i++) {
+					if(i==0) {
+						oneData[i] = rs.getString(i+1);
+					} else {
+						String[] data = rs.getString(i+1).split("[|]");
+						int num = manageCalIndex.get(columns[i-1])-1;
+						oneData[i] = data[num];
+					}
+				}
+				result.add(oneData);
+			}
+		} catch (SQLException e) {
+			System.out.println("ReadSysteamDatas(String logger, String[] columns, Map<String, Integer> manageCalIndex, String[] first, String start, String end) 오류");
+			e.printStackTrace();
+		}
+		
+
+		DBConnection2.releasePstmt(pstmt);
+		DBConnection2.releaseRS(rs);
+		DBConnection2.terminateDB();
+		return result;
 	}
 }

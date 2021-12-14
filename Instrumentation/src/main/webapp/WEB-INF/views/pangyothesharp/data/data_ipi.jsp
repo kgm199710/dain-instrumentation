@@ -4,6 +4,28 @@
 <%@ page session="false" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <!-- ~~ 여기까지 -->
+<%@ page import = "com.dain.instrumentation.model.vo.pangyothesharp.IPIVO" %>
+<%@ page import = "com.dain.instrumentation.model.vo.common.PlaceSetVO" %>
+	<%
+	String pageName = (String)request.getAttribute("pageName");
+	String pageKorName = (String)request.getAttribute("pageKorName");
+	String[] systemName = (String[])request.getAttribute("systemName");
+	String[] ipi2List = (String[])request.getAttribute("ipi2List");
+	String[] ipi3List = (String[])request.getAttribute("ipi3List");
+	String[] ipi7List = (String[])request.getAttribute("ipi7List");
+	String[] ipi11List = (String[])request.getAttribute("ipi11List");
+	String[] ipi13List = (String[])request.getAttribute("ipi13List");
+	String[] wlList = (String[])request.getAttribute("wlList");
+	int id = (int)request.getAttribute("id");
+	int chkAvg = (int)request.getAttribute("chkAvg");
+	String selectId = (String)request.getAttribute("selectId");
+	String start = (String)request.getAttribute("start");
+	String end = (String)request.getAttribute("end");
+// 	String[][] wlDatas = (String[][])request.getAttribute("wlDatas");
+// 	PlaceSetVO senInfo = (PlaceSetVO)request.getAttribute("senInfo");
+	
+// 	String manageData = senInfo.getCalculation6();
+	%>
 <!--개별ipi전용 페이지-->
 <html lang="ko" oncontextmenu='return false' >
 <head>
@@ -12,7 +34,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 	<meta name="description" content="" />
 	<meta name="author" content="" />
-	<title>사이트명</title>
+	<title><%=pageKorName %></title>
 	<link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet" />
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/all.min.js"></script>
 	
@@ -42,7 +64,7 @@
 </head>
 <body class="sb-nav-fixed">
 	<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-		<a class="navbar-brand" href="pangyothesharp">현장명</a>
+		<a class="navbar-brand" href="<%=pageName%>"><%=pageKorName %></a>
 		<button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
 		<form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0"></form>
 		<!-- Navbar-->
@@ -53,42 +75,26 @@
 			<nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
 				<div class="sb-sidenav-menu">
 					<div class="nav">
-						<form method='GET' action= 'data' class="d-md-inline-block form-inline ml-3 mr-3 mr-md-3 my-0 my-md-0">
+						<form method='GET' action= 'data_wl' class="d-md-inline-block form-inline ml-3 mr-3 mr-md-3 my-0 my-md-0">
+							<input type="hidden" name="id" value="<%=id%>">
+							<input type="hidden" name="select_id" value="<%=selectId%>">
+							<input type="hidden" name="chkAvg" value="<%=chkAvg%>">
 							<div class="form-group my-2 btn-block">
 								<label for="start" >시작일 : </label>
-								<input type="text" class="dateFilter form-control-sm btn-block" id="start" name="start" placeholder="Start" value="시작날짜(jsp나 js에서 날자 연산후 출력)">
+								<input type="text" class="dateFilter form-control-sm btn-block" id="start" name="start" placeholder="Start" value="<%=start%>">
 							</div>
 							<div class="form-group my-2 btn-block">
 								<label for="start" >종료일 : </label>
-								<input type="text" class="dateFilter form-control-sm btn-block" id="end" name="end" placeholder="End" value="현날짜(jsp나 js에서 날자 연산후 출력)">
+								<input type="text" class="dateFilter form-control-sm btn-block" id="end" name="end" placeholder="End" value="<%=end%>">
 							</div>
-							<div class="form-check my-2">
-								<input class="form-check-input" id="avg_chk" type="checkbox" name="chkAvg" value="chk" >
-								<label class="form-check-label" for="avg_chk">
-									일평균데이터 보기
-								</label>
-							</div>
-							<!-- 용도불명? -->
-							<input type='hidden' name='select_id' value='select_id'> <!-- 현재 선택된 센서명(ex-WL_02나 IPI_11_16_Y등) -->
-							<!-- 용도불명? -->
-							<input type='hidden' name='id' value='id'><!-- ipi그룹 순서? -->
 							<div class="form-group my-2 btn-block">
 								<button type="submit" class="btn btn-sm btn-primary btn-block">
 									<i class="fa fa-search text-white-50"></i>
 									조회하기
 								</button>
 							</div>
-						</form>
-					
-						<form method='GET' action= 'excel.php' class="d-md-inline-block form-inline ml-3 mr-3 mr-md-3 my-0 my-md-0">
-							<input type='hidden' name='title' value='site'>
-							<input type='hidden' name='select_id' value='select_id'>
-							<input type='hidden' name='id' value='id'>
-							<input type='hidden' name='start' value='start'>
-							<input type='hidden' name='end' value='end'>
-							<input type='hidden' name='chkAvg' value='chkAvg'>
 							<div class="form-group my-2 btn-block">
-								<button type="submit"class="btn btn-sm btn-primary btn-block">
+								<button class="btn btn-sm btn-primary btn-block" onclick="excelDown();">
 									<i class="fas fa-download text-white-50"></i>
 									내려받기
 								</button>
@@ -108,12 +114,13 @@
 						</a>
 						<div class="collapse" id="collapseS" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
 						    <nav class="sb-sidenav-menu-nested nav">
+						    	<% for(int i=0; i<systemName.length; i++){ %>
 						    	<!-- 시스템갯수만큼반복 -->
-						        <a class="nav-link my-0 py-1" href="data_total?id=(순서번호)&start=(시작날짜)&end=(끝날짜)">
+						        <a class="nav-link my-0 py-1" href="data_total?id=<%= i %>&start=<%=start %>&end=<%=end%>">
 						            <i class="fas fa-tag fa-sm text-white-50"></i>
-						            &nbsp n번째 시스템
+						            &nbsp <%= systemName[i] %>
 					            </a>
-					            <!-- 여기까지 -->
+					            <% } %>
 						    </nav>
 						</div>
 						
@@ -123,18 +130,15 @@
 						    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
 						</a>
 						<div class="collapse" id="collapseW" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
-						
 						    <nav class="sb-sidenav-menu-nested nav">
-						    	<!-- 시스템갯수만큼반복 -->
-						        <a class="nav-link my-0 py-1" id="(센서번호-WL_01)" href="data_w?id=(순서번호)&chkAvg=(일평균체크여부)&select_id=(센서명)&start=(시작날자)&end=(끝날자)">
+						    <% for(int i=0; i<wlList.length; i++){ %>
+						    	<a class="nav-link my-0 py-1" id="0" href="data_wl?id=<%=i%>&select_id=<%=wlList[i]%>&chkAvg=0&start=<%=start%>&end=<%=end%>">
 						            <i class="fas fa-tag fa-sm text-white-50"></i>
-						            dummy-wl
+						            <%= wlList[i] %>
 					            </a>
-					            <!-- 여기까지 -->
+						    <%} %>
 						    </nav>
 						</div>
-						
-						
 						<a class="nav-link collapsed" id="IPI" href="#" data-toggle="collapse" data-target="#collapseIPI" aria-expanded="false" aria-controls="collapseIPI" style="width:190px;">
 						    <div class="sb-nav-link-icon"><i class="fas fa-tags fa-sm text-white-50"></i></div>
 						    지중경사계
@@ -142,30 +146,75 @@
 						</a>
 						<div class="collapse" id="collapseIPI" aria-labelledby="headingTwo" data-parent="#sidenavAccordion" style="width:190px;">
 						    <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-						        <a class="nav-link collapsed  my-0 py-1" href="#" data-toggle="collapse" data-target="#(ipi그룹이름-구멍이름)" aria-expanded="false" aria-controls="(ipi그룹이름-구멍이름)">
+						        <a class="nav-link collapsed  my-0 py-1" href="#" data-toggle="collapse" data-target="#IPI-2" aria-expanded="false" aria-controls="IPI-2">
 						            <i class="fas fa-tags fa-sm text-white-50"></i>
-						            dummy-ipi
+						            IPI-2
 						            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
 						        </a>
-						        <div class="collapse" id="(ipi그룹이름-구멍이름)" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
+						        <div class="collapse" id="IPI-2" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
 						            <nav class="sb-sidenav-menu-nested nav">
-						                <a class="nav-link my-0 py-1" id="(ipi그룹이름-구멍이름)_chart" href="data_all_ipi?id=(번호)&start=(시작날자)&end=(끝날자)">누적그래프</a>
-						                <a class="nav-link my-0 py-1" id="(ipi그룹이름-구멍이름)_data" href="data_total_ipi?id=(번호)&start=(시작날자)&end=(끝날자)">누적데이터</a>
-						                <a class="nav-link my-0 py-1" id="(ipi센서명)" href="data_ipi?id=(번호)&select_id=<?=$ipi_name[$i][$c]?>&chkAvg=<?=$chkAvg?>&start=<?=$start?>&end=(끝날자)">(ipi센서명)</a>
+						                <a class="nav-link my-0 py-1" id="IPI-2_chart" href="data_all_ipi?id=0&&end=<%=end%>">누적그래프</a>
+						                <a class="nav-link my-0 py-1" id="IPI-2_data" href="data_total_ipi?id=0&start=<%=start%>&end=<%=end%>">누적데이터</a>
+						                <% for(int i=0; i<ipi2List.length; i++){ %>
+						                <a class="nav-link my-0 py-1" id="<%=ipi2List[i]%>" href="data_ipi?id=0&select_id=<%=ipi2List[i]%>&chkAvg=0&start=<%=start%>&end=<%=end%>"><%=ipi2List[i] %></a>
+						                <% } %>
+						            </nav>
+						        </div><a class="nav-link collapsed  my-0 py-1" href="#" data-toggle="collapse" data-target="#IPI-3" aria-expanded="false" aria-controls="IPI-3">
+						            <i class="fas fa-tags fa-sm text-white-50"></i>
+						            IPI-3
+						            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+						        </a>
+						        <div class="collapse" id="IPI-3" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
+						            <nav class="sb-sidenav-menu-nested nav">
+						                <a class="nav-link my-0 py-1" id="IPI-3_chart" href="data_all_ipi?id=1&end=<%=end%>">누적그래프</a>
+						                <a class="nav-link my-0 py-1" id="IPI-3_data" href="data_total_ipi?id=1&start=<%=start%>&end=<%=end%>">누적데이터</a>
+						                <% for(int i=0; i<ipi3List.length; i++){ %>
+						                <a class="nav-link my-0 py-1" id="<%=ipi3List[i]%>" href="data_ipi?id=1&select_id=<%=ipi3List[i]%>&chkAvg=0&start=<%=start%>&end=<%=end%>"><%=ipi3List[i] %></a>
+						                <% } %>
 						            </nav>
 						        </div>
-								<a class="nav-link collapsed  my-0 py-1" href="#" data-toggle="collapse" data-target="#ipi그룹이름-구멍이름)" aria-expanded="false" aria-controls="(ipi그룹이름-구멍이름)">
-									<i class="fas fa-tags fa-sm text-white-50"></i>
-									&nbsp ipi그룹이름-구멍이름
-									<div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-								</a>
-								<div class="collapse" id="(ipi그룹이름-구멍이름)" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
-									<nav class="sb-sidenav-menu-nested nav">
-										<a class="nav-link my-0 py-1" id="(ipi그룹이름-구멍이름)_chart" href="data_all_ipi?id=(순서번호)&start=(시작날자)&end=(끝날자)">누적그래프</a>
-										<a class="nav-link my-0 py-1" id="(ipi그룹이름-구멍이름)_data" href="data_total_ipi?id=(순서번호)&start=(시작날자)&end=(끝날자)">누적데이터</a>
-										<a class="nav-link my-0 py-1" id="(ipi센서명)" href="data_ipi?id=(순서번호)&select_id=(센서명)&chkAvg=(일평균체크여부)&start=(시작날자)&end=(끝날자)">센서명</a>
-									</nav>
-								</div>
+						        <a class="nav-link collapsed  my-0 py-1" href="#" data-toggle="collapse" data-target="#IPI-7" aria-expanded="false" aria-controls="IPI-7">
+						            <i class="fas fa-tags fa-sm text-white-50"></i>
+						            IPI-7
+						            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+						        </a>
+						        <div class="collapse" id="IPI-7" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
+						            <nav class="sb-sidenav-menu-nested nav">
+						                <a class="nav-link my-0 py-1" id="IPI-7_chart" href="data_all_ipi?id=2&end=<%=end%>">누적그래프</a>
+						                <a class="nav-link my-0 py-1" id="IPI-7_data" href="data_total_ipi?id=2&start=<%=start%>&end=<%=end%>">누적데이터</a>
+						                <% for(int i=0; i<ipi7List.length; i++){ %>
+						                <a class="nav-link my-0 py-1" id="<%=ipi7List[i]%>" href="data_ipi?id=2&select_id=<%=ipi7List[i]%>&chkAvg=0&start=<%=start%>&end=<%=end%>"><%=ipi7List[i] %></a>
+						                <% } %>
+						            </nav>
+						        </div>
+						        <a class="nav-link collapsed  my-0 py-1" href="#" data-toggle="collapse" data-target="#IPI-11" aria-expanded="false" aria-controls="IPI-11">
+						            <i class="fas fa-tags fa-sm text-white-50"></i>
+						            IPI-11
+						            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+						        </a>
+						        <div class="collapse" id="IPI-11" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
+						            <nav class="sb-sidenav-menu-nested nav">
+						                <a class="nav-link my-0 py-1" id="IPI-11_chart" href="data_all_ipi?id=3&end=<%=end%>">누적그래프</a>
+						                <a class="nav-link my-0 py-1" id="IPI-11_data" href="data_total_ipi?id=3&start=<%=start%>&end=<%=end%>">누적데이터</a>
+						                <% for(int i=0; i<ipi11List.length; i++){ %>
+						                <a class="nav-link my-0 py-1" id="<%=ipi11List[i]%>" href="data_ipi?id=3&select_id=<%=ipi11List[i]%>&chkAvg=0&start=<%=start%>&end=<%=end%>"><%=ipi11List[i] %></a>
+						                <% } %>
+						            </nav>
+						        </div>
+						        <a class="nav-link collapsed  my-0 py-1" href="#" data-toggle="collapse" data-target="#IPI-13" aria-expanded="false" aria-controls="IPI-13">
+						            <i class="fas fa-tags fa-sm text-white-50"></i>
+						            IPI-13
+						            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+						        </a>
+						        <div class="collapse" id="IPI-13" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
+						            <nav class="sb-sidenav-menu-nested nav">
+						                <a class="nav-link my-0 py-1" id="IPI-13_chart" href="data_all_ipi?id=4&end=<%=end%>">누적그래프</a>
+						                <a class="nav-link my-0 py-1" id="IPI-13_data" href="data_total_ipi?id=4&start=<%=start%>&end=<%=end%>">누적데이터</a>
+						                <% for(int i=0; i<ipi13List.length; i++){ %>
+						                <a class="nav-link my-0 py-1" id="<%=ipi13List[i]%>" href="data_ipi?id=4&select_id=<%=ipi13List[i]%>&chkAvg=0&start=<%=start%>&end=<%=end%>"><%=ipi13List[i] %></a>
+						                <% } %>
+						            </nav>
+						        </div>
 						    </nav>
 						</div>
 					</div>
